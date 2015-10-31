@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Drawing;
 
 namespace MapMaker
 {
@@ -25,6 +26,9 @@ namespace MapMaker
         // Determines if the grid should be shown.
         private bool isGridOn;
 
+        // The coordinates to draw the map realative to the picture box the map is drawn in.
+        private Point MAP_ROOT = new Point(0, 0);
+
         /**************************************CONSTRUCTOR*/
 
         // Minimal constructor. Only sets columns and rows. Grid is on by default.
@@ -37,14 +41,16 @@ namespace MapMaker
 
         /**************************************ACCESSORS*/
 
-        public void SetColumns(int numberOfColumns) { columns = numberOfColumns; }
-        public int GetColumns() { return columns; }
-        public void SetRows(int numberOfRows) { rows = numberOfRows; }
-        public int GetRows() { return rows; }
-        public void SetTileSize(int sizeOfTile) { tileSize = sizeOfTile; }
-        public int GetTileSize() { return tileSize; }
-        public void SetIsGridOn(bool isTheGridOn) { isGridOn = isTheGridOn; }
-        public bool IsGridOn() { return isGridOn; }
+        public void     SetColumns(int numberOfColumns) { columns = numberOfColumns; }
+        public int      GetColumns()                    { return columns; }
+        public void     SetRows(int numberOfRows)       { rows = numberOfRows; }
+        public int      GetRows()                       { return rows; }
+        public void     SetTileSize(int sizeOfTile)     { tileSize = sizeOfTile; }
+        public int      GetTileSize()                   { return tileSize; }
+        public void     SetIsGridOn(bool isTheGridOn)   { isGridOn = isTheGridOn; }
+        public bool     IsGridOn()                      { return isGridOn; }
+        public void     SetMapRoot(int x, int y)        { MAP_ROOT.X = x; MAP_ROOT.Y = y; }
+        public Point    GetMapRoot()                    { return MAP_ROOT; }
 
     }
 }
