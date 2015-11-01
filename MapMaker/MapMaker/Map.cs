@@ -27,7 +27,11 @@ namespace MapMaker
         private bool isGridOn;
 
         // The coordinates to draw the map realative to the picture box the map is drawn in.
-        private Point MAP_ROOT = new Point(0, 0);
+        private int mapRootX;
+        private int mapRootY;
+
+        // The number of pixels the map moves when it is scrolled with the arrow keys.
+        private int scrollAmount = 5;
 
         /**************************************CONSTRUCTOR*/
 
@@ -49,8 +53,12 @@ namespace MapMaker
         public int      GetTileSize()                   { return tileSize; }
         public void     SetIsGridOn(bool isTheGridOn)   { isGridOn = isTheGridOn; }
         public bool     IsGridOn()                      { return isGridOn; }
-        public void     SetMapRoot(int x, int y)        { MAP_ROOT.X = x; MAP_ROOT.Y = y; }
-        public Point    GetMapRoot()                    { return MAP_ROOT; }
+        public void     SetMapRootX(int x)              { mapRootX = x; }
+        public void     SetMapRootY(int y)              { mapRootY = y; }
+        public int      GetMapRootX()                   { return mapRootX; }
+        public int      GetMapRootY()                   { return mapRootY; }
+        public void     SetScrollAmount(int amount)     { scrollAmount = amount; }
+        public int      GetScrollAmount()               { return scrollAmount; }
 
     }
 }

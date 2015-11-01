@@ -14,10 +14,10 @@ namespace MapMaker
     {
 
         // Load a jpg from local drive. (ON DESKTOP)
-        Bitmap testImage = new Bitmap(Image.FromFile("C:\\Users\\Nick\\Desktop\\DND\\tiles\\Torstan's100pxTiles\\Torstan's100pxTiles\\Background\\Textures\\Wood,horizontal.jpg"), 100, 100);
+        //Bitmap testImage = new Bitmap(Image.FromFile("C:\\Users\\Nick\\Desktop\\DND\\tiles\\Torstan's100pxTiles\\Torstan's100pxTiles\\Background\\Textures\\Wood,horizontal.jpg"), 100, 100);
 
         // Load a jpg from local drive. (ON LAPTOP)
-        //Bitmap testImage = new Bitmap(Image.FromFile("C:\\Users\\Nick\\Dropbox\\DIEDIE\\tiles\\Wood,horizontal.jpg"), 100, 100);
+        Bitmap testImage = new Bitmap(Image.FromFile("C:\\Users\\Nick\\Dropbox\\DIEDIE\\tiles\\Wood,horizontal.jpg"), 100, 100);
 
         // Get the dimensions of the primary monitor.
         int screenWidth = Screen.PrimaryScreen.Bounds.Width;
@@ -41,6 +41,9 @@ namespace MapMaker
         public mainForm()
         {
             InitializeComponent();
+
+            // Set up the key press listener.
+            this.KeyPress += new KeyPressEventHandler(Form1_KeyPress);
 
             // Link our draw surface to the picture box on the windows form.
             drawSurface = pictureBox;
@@ -67,7 +70,6 @@ namespace MapMaker
 
             // Link the paint event of our draw surface to the windows event cycle
             drawSurface.Paint += new System.Windows.Forms.PaintEventHandler(this.drawSurface_Paint);
-
         }
 
         // This is where drawing is actually done.
@@ -81,9 +83,11 @@ namespace MapMaker
             {
                 for (int j = 0; j < testMap.GetRows(); j++)
                 {
+                    /* Draw the tiles dynamically based on where they are in the grid, 
+                        and where the map root is set. */
                     g.DrawImage(testImage,
-                                i * testMap.GetTileSize(),
-                                j * testMap.GetTileSize(),
+                                (i * testMap.GetTileSize()) + testMap.GetMapRootX(),
+                                (j * testMap.GetTileSize()) + testMap.GetMapRootY(),
                                 testMap.GetTileSize(),
                                 testMap.GetTileSize());
                 }
@@ -97,12 +101,59 @@ namespace MapMaker
                     for (int j = 0; j < testMap.GetRows(); j++)
                     {
                         g.DrawRectangle(rectPen,
-                                        i * testMap.GetTileSize(),
-                                        j * testMap.GetTileSize(),
+                                        (i * testMap.GetTileSize()) + testMap.GetMapRootX(),
+                                        (j * testMap.GetTileSize()) + testMap.GetMapRootY(),
                                         testMap.GetTileSize(),
                                         testMap.GetTileSize());
                     }
                 }
+            }
+        }
+
+        // Handles Alpha-Numeric key presses.
+        void Form1_KeyPress(object sender, KeyPressEventArgs e){}
+        
+        /* Handling arrow key events is quite convoluted in C#.  This method is the first step in
+         capturing and processing non Alpha-Numeric key presses. This checks if any such keys were pressed,
+         then passes the ball to the OnKeyDown() event below. */
+        protected override bool IsInputKey(Keys keyData)
+        {
+            switch (keyData)
+            {
+                // Right now I am only checking for arrow key presses.
+                case Keys.Left:
+                case Keys.Right:
+                case Keys.Up:
+                case Keys.Down:
+                    return true;
+            }
+            return base.IsInputKey(keyData);
+        }
+
+        /* If a non Alpha-Numeric key press is detected in IsInputKey() above, this is where
+         you filter out the actual key pressed and handle it appropriately. */
+        protected override void OnKeyDown(KeyEventArgs e)
+        {
+            base.OnKeyDown(e);
+
+            switch (e.KeyCode)
+            {
+                case Keys.Left:
+                    testMap.SetMapRootX(testMap.GetMapRootX() + testMap.GetScrollAmount());
+                    this.Refresh(); // Must call refresh or you won't see any change on screen.
+                    break;
+                case Keys.Right:
+                    testMap.SetMapRootX(testMap.GetMapRootX() - testMap.GetScrollAmount());
+                    this.Refresh();
+                    break;
+                case Keys.Up:
+                    testMap.SetMapRootY(testMap.GetMapRootY() - testMap.GetScrollAmount());
+                    this.Refresh();
+                    break;
+                case Keys.Down:
+                    testMap.SetMapRootY(testMap.GetMapRootY() + testMap.GetScrollAmount());
+                    this.Refresh();
+                    break;
             }
         }
     }
