@@ -17,7 +17,7 @@ namespace MapMaker
         //Bitmap testImage = new Bitmap(Image.FromFile("C:\\Users\\Nick\\Desktop\\DND\\tiles\\Torstan's100pxTiles\\Torstan's100pxTiles\\Background\\Textures\\Wood,horizontal.jpg"), 100, 100);
 
         // Load a jpg from local drive. (ON LAPTOP)
-        Bitmap testImage = new Bitmap(Image.FromFile("C:\\Users\\Nick\\Dropbox\\DIEDIE\\tiles\\Wood,horizontal.jpg"), 100, 100);
+        Bitmap testImage = new Bitmap(Image.FromFile("C:\\Users\\Nick\\Desktop\\Wood,horizontal.jpg"), 100, 100);
 
         // Get the dimensions of the primary monitor.
         int screenWidth = Screen.PrimaryScreen.Bounds.Width;
