@@ -30,13 +30,17 @@ namespace MapMaker
                 images.Add(name, image);
         }
 
-        // Retrieves the specified image from the library. Pass the string key value.
+        /* Retrieves the specified image from the library. Pass the string key value. 
+         Returns a default image if the passed image name is not found in the library. */
         public Bitmap GetImage(String name)
         {
-            if (images.ContainsKey(name))
-                return images[name];
-            else
-                return null;    // TODO - CHANGE THIS TO RETURN A DEFAULT IMAGE!!
+            // Make sure a null argument wasn't passed, and see if "name" is in the library.
+            if (name != null)
+                if (images.ContainsKey(name))
+                    return images[name];
+
+            return images[Map.GetDefaultImage()];
+
         }
 
         // Loads the predermined default image file.
@@ -57,6 +61,7 @@ namespace MapMaker
             catch (Exception e)
             {
                 MessageBox.Show("Default image could not be loaded.");
+                Console.Write(e.ToString());
             }
         }
     }

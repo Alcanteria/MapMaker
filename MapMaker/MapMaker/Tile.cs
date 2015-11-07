@@ -12,25 +12,44 @@ namespace MapMaker
     {
         /* This list contains the key(s) of each image placed on this tile. The key is used to pull
          the appropriate image from the ImagePalette class. A tile can hold more than one key at a time. */
-        private ArrayList keys;
+        private String[] keys;
 
         /**************************************CONSTRUCTOR*/
 
         public Tile() 
         {
-            keys = new ArrayList();
+            keys = new String[2];
         }
 
         // Retrieves the list of keys this tile has.
-        public ArrayList GetImageKeys()
+        public String[] GetImageKeys()
         {
             return keys;
         }
 
-        // Adds another image key to this tile's list.
-        public void AddImageKey(String name)
+        // Adds an image to the first layer of the tile. Used for the floor.
+        public void AddTileFloor(String name)
         {
-            GetImageKeys().Add(name);
+            GetImageKeys()[0] = name;
         }
+
+        // Adds an image to the second layer of the tile. Used for walls or decor.
+        public void AddTileDecor(String name)
+        {
+            GetImageKeys()[1] = name;
+        }
+
+        // Returns theb "bottom" or floor image for the tile.
+        public String GetTileFloor()
+        {
+            return GetImageKeys()[0];
+        }
+
+        // Returns the "top" or decor image for the tile.
+        public String GetTileDecor()
+        {
+            return GetImageKeys()[1];
+        }
+
     }
 }

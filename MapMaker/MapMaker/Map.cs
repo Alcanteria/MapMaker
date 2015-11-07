@@ -60,6 +60,10 @@ namespace MapMaker
 
             // Initialize the Tile array based on the above dimensions.
             TILES = new Tile[columns, rows];
+
+            for (int i = 0; i < columns; i++)
+                for (int j = 0; j < rows; j++)
+                    TILES[i, j] = new Tile();
         }
 
         /**************************************ACCESSORS*/
@@ -80,6 +84,12 @@ namespace MapMaker
         public int      GetScrollAmount()               { return            scrollAmount; }
         public Tile[,]  GetTiles()                      { return            TILES; }
         public static String GetDefaultImage()          { return            DEFAULT_IMAGE; }
+
+        // Retreives the image for the tile at the specified index.
+        public Bitmap GetTileImage(int x, int y)
+        {
+            return IMAGE_PALETTE.GetImage(TILES[x, y].GetTileFloor());
+        }
 
     }
 }

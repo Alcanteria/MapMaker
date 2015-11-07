@@ -85,7 +85,7 @@ namespace MapMaker
                 {
                     /* Draw the tiles dynamically based on where they are in the grid, 
                         and where the map root is set. */
-                    g.DrawImage(testImage,
+                    g.DrawImage(testMap.GetTileImage(i, j),
                                 (i * testMap.GetTileSize()) + testMap.GetMapRootX(),
                                 (j * testMap.GetTileSize()) + testMap.GetMapRootY(),
                                 testMap.GetTileSize(),
