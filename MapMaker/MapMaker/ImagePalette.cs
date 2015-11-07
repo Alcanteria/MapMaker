@@ -48,9 +48,6 @@ namespace MapMaker
         {
             try
             {
-                // Load a jpg from local drive. (ON DESKTOP)
-                //Bitmap testImage = new Bitmap(Image.FromFile("C:\\Users\\Nick\\Desktop\\DND\\tiles\\Torstan's100pxTiles\\Torstan's100pxTiles\\Background\\Textures\\" + Map.DEFAULT_IMAGE), 100, 100);
-
                 // Load a jpg from local drive. (ON LAPTOP)
                 Bitmap defaultImage = new Bitmap(Image.FromFile("C:\\Users\\Nick\\Desktop\\" + Map.GetDefaultImage()), 100, 100);
 
