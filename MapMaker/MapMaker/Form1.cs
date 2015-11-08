@@ -55,6 +55,10 @@ namespace MapMaker
             // Link our draw surface to the picture box on the windows form.
             drawSurface = pictureBox;
 
+            // Add the key listeners to the buttons on the form. This is to filter out arrow key presses when a button is selected.
+            floorButton.PreviewKeyDown += new PreviewKeyDownEventHandler(floorButton_PreviewKeyDown);
+            decorButton.PreviewKeyDown += new PreviewKeyDownEventHandler(decorButton_PreviewKeyDown);
+
             // Link our buttons to the form buttons
             FLOOR_BUTTON = floorButton;
             DECOR_BUTTON = decorButton;
@@ -131,10 +135,19 @@ namespace MapMaker
 
         // Handles Alpha-Numeric key presses.
         void Form1_KeyPress(object sender, KeyPressEventArgs e) {}
-        
+
+        // This filters out arrow key presses when this button is selected on the windows form.
+        private void floorButton_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e) { CheckForArrowKeys(e); }
+        private void decorButton_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e) { CheckForArrowKeys(e); }
+
+        /* If a non Alpha-Numeric key press is detected in IsInputKey() above, this is where
+         you filter out the actual key pressed and handle it appropriately. */
+        protected override void OnKeyDown(KeyEventArgs e) { HandleArrowKeyPress(e); }
+
         /* Handling arrow key events is quite convoluted in C#.  This method is the first step in
          capturing and processing non Alpha-Numeric key presses. This checks if any such keys were pressed,
-         then passes the ball to the OnKeyDown() event below. */
+         then passes the ball to the OnKeyDown() event below.
+         THIS ONLY FIRES WHEN NO OTHER CONTROL AS BEEN CLICKED ON THE WINDOWS FORM. */
         protected override bool IsInputKey(Keys keyData)
         {
             switch (keyData)
@@ -149,12 +162,14 @@ namespace MapMaker
             return base.IsInputKey(keyData);
         }
 
-        /* If a non Alpha-Numeric key press is detected in IsInputKey() above, this is where
-         you filter out the actual key pressed and handle it appropriately. */
-        protected override void OnKeyDown(KeyEventArgs e)
+        /* This method is do reduce copy and pasting the switch statement to determine which arrow keys are pressed. 
+         Since windows is forcing me to override methods for OnPreviewKeyDown and OnKeyDown for EVERY button on the
+         Windows form, I made this to make it a little more streamlined. */
+        public void HandleArrowKeyPress(KeyEventArgs e)
         {
             base.OnKeyDown(e);
 
+            // Moves the map based on which arrow key is pressed.
             switch (e.KeyCode)
             {
                 case Keys.Left:
@@ -176,6 +191,21 @@ namespace MapMaker
             }
         }
 
+        /*Again, since windows is making me check for arrow keys for EVERY button on the form, this method is just to streamline
+         the process and reduce copy/pasting. This part just makes sure one of the arrow keys was pressed. */
+        public void CheckForArrowKeys(PreviewKeyDownEventArgs e)
+        {
+            switch (e.KeyCode)
+            {
+                case Keys.Up:
+                case Keys.Down:
+                case Keys.Left:
+                case Keys.Right:
+                    e.IsInputKey = true;
+                    break;
+            }
+        }
+
         /*************************************************************BUTTON CLICKS*/
 
         // Click event for the floor select button.
@@ -187,6 +217,7 @@ namespace MapMaker
                 Bitmap newImage = new Bitmap(Image.FromFile(selectImageDialog.FileName), 100, 100);
                 newImage.Save("C:\\Users\\Nick\\Desktop\\newImage.jpeg", ImageFormat.Jpeg);
             }
+
         }
 
         // Click event for the decor select button.
@@ -196,5 +227,6 @@ namespace MapMaker
         }
 
         /*************************************************************FILE HANDLING*/
+
     }
 }

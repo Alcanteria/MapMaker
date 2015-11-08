@@ -48,6 +48,12 @@ namespace MapMaker
             // The array of tiles in the map.
             private Tile[,] TILES;
 
+            // Different "states" of tiles. Determines where the current tile image goes on the map layer.
+            public static enum LAYER { FLOOR, DECOR, NONE };
+
+            // Current layer the tiles are being placed on.
+            private LAYER currentLayer;
+
         /**************************************CONSTRUCTOR*/
 
         // Creates a map with the supplied dimensions (in tiles, not pixels).
@@ -84,6 +90,8 @@ namespace MapMaker
         public int      GetScrollAmount()               { return            scrollAmount; }
         public Tile[,]  GetTiles()                      { return            TILES; }
         public static String GetDefaultImage()          { return            DEFAULT_IMAGE; }
+        public LAYER    GetCurrentLayer()               { return            currentLayer; }
+        public void     SetCurrentLayer(LAYER l)        { currentLayer  =   l; }
 
         // Retreives the image for the tile at the specified index.
         public Bitmap GetTileImage(int x, int y)

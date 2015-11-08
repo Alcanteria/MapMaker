@@ -51,7 +51,7 @@
             this.floorButton.Location = new System.Drawing.Point(13, 35);
             this.floorButton.Name = "floorButton";
             this.floorButton.Size = new System.Drawing.Size(111, 24);
-            this.floorButton.TabIndex = 10;
+            this.floorButton.TabIndex = 0;
             this.floorButton.TabStop = false;
             this.floorButton.Text = "Floor";
             this.toolTips.SetToolTip(this.floorButton, "Select a tile for the map floor.");
@@ -64,7 +64,7 @@
             this.decorButton.Location = new System.Drawing.Point(13, 76);
             this.decorButton.Name = "decorButton";
             this.decorButton.Size = new System.Drawing.Size(111, 25);
-            this.decorButton.TabIndex = 11;
+            this.decorButton.TabIndex = 0;
             this.decorButton.TabStop = false;
             this.decorButton.Text = "Decor";
             this.toolTips.SetToolTip(this.decorButton, "Select a tile to place on top of the floor.");
