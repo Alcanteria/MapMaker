@@ -93,7 +93,7 @@ namespace MapMaker
 
         }
 
-        // This is where drawing is actually done.
+        /**********************************************************************PAINT*/
         private void drawSurface_Paint(object sender, PaintEventArgs e)
         {
             // Good ol' graphics object.
@@ -214,8 +214,27 @@ namespace MapMaker
             // Open the image select diaglog box and check if the user selected "OK"
             if (selectImageDialog.ShowDialog() == DialogResult.OK)
             {
-                Bitmap newImage = new Bitmap(Image.FromFile(selectImageDialog.FileName), 100, 100);
-                newImage.Save("C:\\Users\\Nick\\Desktop\\newImage.jpeg", ImageFormat.Jpeg);
+                try
+                {
+                    // Load the image
+                    Bitmap newImage = new Bitmap(Image.FromFile(selectImageDialog.FileName), ImagePalette.IMAGE_SIZE, ImagePalette.IMAGE_SIZE);
+
+                     // Add it to the image palette
+                    testMap.GetImagePalette().AddNewImage(selectImageDialog.FileName, newImage);
+
+                    // Set the current paint layer.
+                    testMap.SetCurrentLayer(Map.LAYER.FLOOR);
+
+                    // Set the current image to paint.
+                    testMap.GetImagePalette().SetCurrentImage(selectImageDialog.FileName);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Could not load image: " + selectImageDialog.FileName);
+                    Console.WriteLine("Could not load image: " + selectImageDialog.FileName);
+                    Console.WriteLine(ex.ToString());
+                }
+
             }
 
         }

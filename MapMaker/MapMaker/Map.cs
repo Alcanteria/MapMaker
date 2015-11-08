@@ -38,7 +38,7 @@ namespace MapMaker
         /***************************************IMAGE PALETTE*/
 
             // The object that stores all images used in the map.
-            private ImagePalette IMAGE_PALETTE = new ImagePalette();
+            private ImagePalette imagePalette = new ImagePalette();
 
             // The default image to use in the event that a an image is missing.
             private static String DEFAULT_IMAGE =("Wood,horizontal.jpg");
@@ -49,7 +49,7 @@ namespace MapMaker
             private Tile[,] TILES;
 
             // Different "states" of tiles. Determines where the current tile image goes on the map layer.
-            public static enum LAYER { FLOOR, DECOR, NONE };
+            public enum LAYER { FLOOR, DECOR, NONE };
 
             // Current layer the tiles are being placed on.
             private LAYER currentLayer;
@@ -90,13 +90,14 @@ namespace MapMaker
         public int      GetScrollAmount()               { return            scrollAmount; }
         public Tile[,]  GetTiles()                      { return            TILES; }
         public static String GetDefaultImage()          { return            DEFAULT_IMAGE; }
+        public ImagePalette GetImagePalette()           { return            imagePalette; }
         public LAYER    GetCurrentLayer()               { return            currentLayer; }
         public void     SetCurrentLayer(LAYER l)        { currentLayer  =   l; }
 
         // Retreives the image for the tile at the specified index.
         public Bitmap GetTileImage(int x, int y)
         {
-            return IMAGE_PALETTE.GetImage(TILES[x, y].GetTileFloor());
+            return imagePalette.GetImage(TILES[x, y].GetTileFloor());
         }
 
     }
