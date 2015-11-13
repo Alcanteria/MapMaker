@@ -21,12 +21,6 @@ namespace MapMaker
             keys = new String[2];
         }
 
-        // Retrieves the list of keys this tile has.
-        public String[] GetImageKeys()
-        {
-            return keys;
-        }
-
         // Adds an image to the first layer of the tile. Used for the floor.
         public void AddTileFloor(String name)
         {
@@ -39,17 +33,16 @@ namespace MapMaker
             GetImageKeys()[1] = name;
         }
 
-        // Returns theb "bottom" or floor image for the tile.
-        public String GetTileFloor()
-        {
-            return GetImageKeys()[0];
-        }
+        /***************************************ACCESSORS*/
+
+        // Retrieves the list of keys this tile has.
+        public  String[]    GetImageKeys()  {return     keys;}
+
+        // Returns the "bottom" or floor image for the tile.
+        public  String      GetTileFloor()  {return     GetImageKeys()[0];}
 
         // Returns the "top" or decor image for the tile.
-        public String GetTileDecor()
-        {
-            return GetImageKeys()[1];
-        }
+        public  String      GetTileDecor()  {return     GetImageKeys()[1];}
 
     }
 }

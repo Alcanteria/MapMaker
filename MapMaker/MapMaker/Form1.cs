@@ -227,6 +227,11 @@ namespace MapMaker
 
                     // Set the current image to paint.
                     testMap.GetImagePalette().SetCurrentImage(selectImageDialog.FileName);
+
+                    // NEED TO ADD 1 TO THE INDEX NUMBER RETURNED IN "lastIndexOf()"
+                    Console.WriteLine("Loaded: " + selectImageDialog.FileName);
+                    Console.WriteLine("Image key = " + 
+                                        selectImageDialog.FileName.Substring(selectImageDialog.FileName.LastIndexOf("\\")));
                 }
                 catch (Exception ex)
                 {
