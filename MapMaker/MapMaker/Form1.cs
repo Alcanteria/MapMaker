@@ -45,6 +45,15 @@ namespace MapMaker
             // Pen for drawing the grid.
             Pen rectPen = new Pen(Color.Black);
 
+        /*********************************************MOUSE CLICKS*/
+
+            // This is an offest that compensates for a slight variance in click position.
+            private const int X_OFFSET = 10;
+            private const int Y_OFFSET = 33;
+
+            // Location of the current mouse click on the map, filtered through any necessary offsets.
+            private Point mouseLocation = new Point();
+
         public mainForm()
         {
             InitializeComponent();
@@ -206,7 +215,7 @@ namespace MapMaker
             }
         }
 
-        /*************************************************************BUTTON CLICKS*/
+        /*************************************************************MOUSE CLICKS*/
 
         // Click event for the floor select button.
         private void floorButton_Click(object sender, EventArgs e)
@@ -227,11 +236,6 @@ namespace MapMaker
 
                     // Set the current image to paint.
                     testMap.GetImagePalette().SetCurrentImage(selectImageDialog.FileName);
-
-                    // NEED TO ADD 1 TO THE INDEX NUMBER RETURNED IN "lastIndexOf()"
-                    Console.WriteLine("Loaded: " + selectImageDialog.FileName);
-                    Console.WriteLine("Image key = " + 
-                                        selectImageDialog.FileName.Substring(selectImageDialog.FileName.LastIndexOf("\\")));
                 }
                 catch (Exception ex)
                 {
@@ -248,6 +252,24 @@ namespace MapMaker
         private void decorButton_Click(object sender, EventArgs e)
         {
 
+        }
+
+        // Called when the map is clicked.
+        private void pictureBox_Click(object sender, EventArgs e)
+        {
+            SetMouseLocation(MousePosition.X, MousePosition.Y);
+
+            testMap.GetClickedTile(mouseLocation);
+
+            Console.WriteLine("Clicked at: " + mouseLocation.X + "/" + mouseLocation.Y);
+        }
+
+        /* Sets the location of the mouse cursor on the map. Filters the location through any
+            necessary offsets. */
+        public void SetMouseLocation(int x, int y)
+        {
+            mouseLocation.X = x - testMap.GetMapRootX() - Location.X - drawSurface.Location.X - X_OFFSET;
+            mouseLocation.Y = y - testMap.GetMapRootY() - Location.Y - drawSurface.Location.Y - Y_OFFSET;
         }
 
         /*************************************************************FILE HANDLING*/

@@ -14,7 +14,7 @@ namespace MapMaker
         private Dictionary<String, Bitmap> images;
 
         // Width and height all images are scaled to in pixels.
-        public static int IMAGE_SIZE = 200;
+        public static int IMAGE_SIZE = 100;
 
         // Contains the current image to be painted onto the map.
         private String currentImage;
@@ -77,8 +77,6 @@ namespace MapMaker
                 else
                     Console.WriteLine(name + " could not be found in image library.");
             }
-            else
-                Console.WriteLine("Null argument passed to GetImage()");
 
             return images[Map.GetDefaultImage()];
 

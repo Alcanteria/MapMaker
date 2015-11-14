@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
+using System.Windows.Forms;
 
 namespace MapMaker
 {
@@ -98,6 +99,26 @@ namespace MapMaker
         public Bitmap GetTileImage(int x, int y)
         {
             return imagePalette.GetImage(TILES[x, y].GetTileFloor());
+        }
+
+        // Returns the tile that was clicked by the user.
+        public Tile GetClickedTile(Point click)
+        {
+            int x = click.X / GetTileSize();
+            int y = click.Y / GetTileSize();
+
+            // Check to make sure the index number is not out of bounds of the array.
+            if (x >= 0 && x <= (GetColumns() - 1) &&
+                y >= 0 && y <= (GetRows() - 1))
+            {
+                Console.WriteLine("Clicked tile: " + x + "/" + y);
+                return GetTiles()[x, y];
+            }
+            else
+            {
+                MessageBox.Show("Tile is out of bounds. You fucked up on your math in GetClickedTile()");
+                return GetTiles()[0, 0];
+            }
         }
 
     }
