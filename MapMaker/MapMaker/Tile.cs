@@ -44,5 +44,17 @@ namespace MapMaker
         // Returns the "top" or decor image for the tile.
         public  String      GetTileDecor()  {return     GetImageKeys()[1];}
 
+        // Sets the tile image key based on the passed layer.
+        public void SetTileImage(Map.LAYER layer, String key)
+        {
+            GetImageKeys()[(int)layer] = key;
+        }
+
+        // Returns the tile image key based on the layer passed.
+        public String GetTileImage(Map.LAYER layer)
+        {
+            return GetImageKeys()[(int)layer];
+        }
+
     }
 }

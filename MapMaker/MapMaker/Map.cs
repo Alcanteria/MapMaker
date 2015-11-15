@@ -95,10 +95,10 @@ namespace MapMaker
         public LAYER    GetCurrentLayer()               { return            currentLayer; }
         public void     SetCurrentLayer(LAYER l)        { currentLayer  =   l; }
 
-        // Retreives the image for the tile at the specified index.
-        public Bitmap GetTileImage(int x, int y)
+        // Retreives the image for the tile at the specified index, on the specified layer.
+        public Bitmap GetTileImage(int x, int y, Map.LAYER layer)
         {
-            return imagePalette.GetImage(TILES[x, y].GetTileFloor());
+            return imagePalette.GetImage(TILES[x, y].GetTileImage(layer));
         }
 
         // Returns the tile that was clicked by the user.

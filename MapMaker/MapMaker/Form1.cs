@@ -108,20 +108,44 @@ namespace MapMaker
             // Good ol' graphics object.
             Graphics g = e.Graphics;
 
-            // Draw the test tiles.
-            for (int i = 0; i < testMap.GetColumns(); i++)
-            {
-                for (int j = 0; j < testMap.GetRows(); j++)
+            /******************************************** DRAW TILES*/
+                
+                // Floor layer
+                for (int i = 0; i < testMap.GetColumns(); i++)
                 {
-                    /* Draw the tiles dynamically based on where they are in the grid, 
-                        and where the map root is set. */
-                    g.DrawImage(testMap.GetTileImage(i, j),
-                                (i * testMap.GetTileSize()) + testMap.GetMapRootX(),
-                                (j * testMap.GetTileSize()) + testMap.GetMapRootY(),
-                                testMap.GetTileSize(),
-                                testMap.GetTileSize());
+                    for (int j = 0; j < testMap.GetRows(); j++)
+                    {
+                        /* Draw the tiles dynamically based on where they are in the grid, 
+                            and where the map root is set. 
+                           This is the BOTTOM, or floor layer. This will always draw something. */
+                        g.DrawImage(testMap.GetTileImage(i, j, Map.LAYER.FLOOR),
+                                    (i * testMap.GetTileSize()) + testMap.GetMapRootX(),
+                                    (j * testMap.GetTileSize()) + testMap.GetMapRootY(),
+                                    testMap.GetTileSize(),
+                                    testMap.GetTileSize());
+                    }
                 }
-            }
+
+                // Decor layer
+                for (int i = 0; i < testMap.GetColumns(); i++)
+                {
+                    for (int j = 0; j < testMap.GetRows(); j++)
+                    {
+                        /* Draw the tiles dynamically based on where they are in the grid, 
+                            and where the map root is set. 
+                           This is the TOP, or decor layer. This will only draw something if there is an
+                           image specified for this layer. */
+
+                        if (testMap.GetTiles()[i, j].GetTileImage(Map.LAYER.DECOR) != null) 
+                        {
+                            g.DrawImage(testMap.GetTileImage(i, j, Map.LAYER.DECOR),
+                                        (i * testMap.GetTileSize()) + testMap.GetMapRootX(),
+                                        (j * testMap.GetTileSize()) + testMap.GetMapRootY(),
+                                        testMap.GetTileSize(),
+                                        testMap.GetTileSize());
+                        }
+                    }
+                }
 
             // Draw the grid if it is turned on.
             if (testMap.IsGridOn())
@@ -251,17 +275,45 @@ namespace MapMaker
         // Click event for the decor select button.
         private void decorButton_Click(object sender, EventArgs e)
         {
+            // Open the image select diaglog box and check if the user selected "OK"
+            if (selectImageDialog.ShowDialog() == DialogResult.OK)
+            {
+                try
+                {
+                    // Load the image
+                    Bitmap newImage = new Bitmap(Image.FromFile(selectImageDialog.FileName), ImagePalette.IMAGE_SIZE, ImagePalette.IMAGE_SIZE);
 
+                    // Add it to the image palette
+                    testMap.GetImagePalette().AddNewImage(selectImageDialog.FileName, newImage);
+
+                    // Set the current paint layer.
+                    testMap.SetCurrentLayer(Map.LAYER.DECOR);
+
+                    // Set the current image to paint.
+                    testMap.GetImagePalette().SetCurrentImage(selectImageDialog.FileName);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Could not load image: " + selectImageDialog.FileName);
+                    Console.WriteLine("Could not load image: " + selectImageDialog.FileName);
+                    Console.WriteLine(ex.ToString());
+                }
+
+            }
         }
 
         // Called when the map is clicked.
         private void pictureBox_Click(object sender, EventArgs e)
         {
+            // Figure out the location of the click.
             SetMouseLocation(MousePosition.X, MousePosition.Y);
 
-            testMap.GetClickedTile(mouseLocation);
-
-            Console.WriteLine("Clicked at: " + mouseLocation.X + "/" + mouseLocation.Y);
+            // Check if there is a current image selected. If there is, set the tile to it.
+            if (testMap.GetImagePalette().GetCurrentImage() != null)
+            {
+                testMap.GetClickedTile(mouseLocation).SetTileImage(testMap.GetCurrentLayer(), testMap.GetImagePalette().GetCurrentImage());
+                Refresh();
+            }            
         }
 
         /* Sets the location of the mouse cursor on the map. Filters the location through any
