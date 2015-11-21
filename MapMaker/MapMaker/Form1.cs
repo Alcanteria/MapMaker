@@ -28,7 +28,7 @@ namespace MapMaker
         /***********************************************MAP PARTS*/
 
             // Map object.
-            private Map testMap = new Map(10, 10);
+            private Map map = new Map(10, 10);
 
         /********************************************WINDOWS FORM PARTS*/
 
@@ -111,54 +111,54 @@ namespace MapMaker
             /******************************************** DRAW TILES*/
                 
                 // Floor layer
-                for (int i = 0; i < testMap.GetColumns(); i++)
+                for (int i = 0; i < map.GetColumns(); i++)
                 {
-                    for (int j = 0; j < testMap.GetRows(); j++)
+                    for (int j = 0; j < map.GetRows(); j++)
                     {
                         /* Draw the tiles dynamically based on where they are in the grid, 
                             and where the map root is set. 
                            This is the BOTTOM, or floor layer. This will always draw something. */
-                        g.DrawImage(testMap.GetTileImage(i, j, Map.LAYER.FLOOR),
-                                    (i * testMap.GetTileSize()) + testMap.GetMapRootX(),
-                                    (j * testMap.GetTileSize()) + testMap.GetMapRootY(),
-                                    testMap.GetTileSize(),
-                                    testMap.GetTileSize());
+                        g.DrawImage(map.GetTileImage(i, j, Map.LAYER.FLOOR),
+                                    (i * map.GetTileSize()) + map.GetMapRootX(),
+                                    (j * map.GetTileSize()) + map.GetMapRootY(),
+                                    map.GetTileSize(),
+                                    map.GetTileSize());
                     }
                 }
 
                 // Decor layer
-                for (int i = 0; i < testMap.GetColumns(); i++)
+                for (int i = 0; i < map.GetColumns(); i++)
                 {
-                    for (int j = 0; j < testMap.GetRows(); j++)
+                    for (int j = 0; j < map.GetRows(); j++)
                     {
                         /* Draw the tiles dynamically based on where they are in the grid, 
                             and where the map root is set. 
                            This is the TOP, or decor layer. This will only draw something if there is an
                            image specified for this layer. */
 
-                        if (testMap.GetTiles()[i, j].GetTileImage(Map.LAYER.DECOR) != null) 
+                        if (map.GetTiles()[i, j].GetTileImage(Map.LAYER.DECOR) != null) 
                         {
-                            g.DrawImage(testMap.GetTileImage(i, j, Map.LAYER.DECOR),
-                                        (i * testMap.GetTileSize()) + testMap.GetMapRootX(),
-                                        (j * testMap.GetTileSize()) + testMap.GetMapRootY(),
-                                        testMap.GetTileSize(),
-                                        testMap.GetTileSize());
+                            g.DrawImage(map.GetTileImage(i, j, Map.LAYER.DECOR),
+                                        (i * map.GetTileSize()) + map.GetMapRootX(),
+                                        (j * map.GetTileSize()) + map.GetMapRootY(),
+                                        map.GetTileSize(),
+                                        map.GetTileSize());
                         }
                     }
                 }
 
             // Draw the grid if it is turned on.
-            if (testMap.IsGridOn())
+            if (map.IsGridOn())
             {
-                for (int i = 0; i < testMap.GetColumns(); i++)
+                for (int i = 0; i < map.GetColumns(); i++)
                 {
-                    for (int j = 0; j < testMap.GetRows(); j++)
+                    for (int j = 0; j < map.GetRows(); j++)
                     {
                         g.DrawRectangle(rectPen,
-                                        (i * testMap.GetTileSize()) + testMap.GetMapRootX(),
-                                        (j * testMap.GetTileSize()) + testMap.GetMapRootY(),
-                                        testMap.GetTileSize(),
-                                        testMap.GetTileSize());
+                                        (i * map.GetTileSize()) + map.GetMapRootX(),
+                                        (j * map.GetTileSize()) + map.GetMapRootY(),
+                                        map.GetTileSize(),
+                                        map.GetTileSize());
                     }
                 }
             }
@@ -206,19 +206,19 @@ namespace MapMaker
             switch (e.KeyCode)
             {
                 case Keys.Left:
-                    testMap.SetMapRootX(testMap.GetMapRootX() + testMap.GetScrollAmount());
+                    map.SetMapRootX(map.GetMapRootX() + map.GetScrollAmount());
                     this.Refresh(); // Must call refresh or you won't see any change on screen.
                     break;
                 case Keys.Right:
-                    testMap.SetMapRootX(testMap.GetMapRootX() - testMap.GetScrollAmount());
+                    map.SetMapRootX(map.GetMapRootX() - map.GetScrollAmount());
                     this.Refresh();
                     break;
                 case Keys.Up:
-                    testMap.SetMapRootY(testMap.GetMapRootY() - testMap.GetScrollAmount());
+                    map.SetMapRootY(map.GetMapRootY() - map.GetScrollAmount());
                     this.Refresh();
                     break;
                 case Keys.Down:
-                    testMap.SetMapRootY(testMap.GetMapRootY() + testMap.GetScrollAmount());
+                    map.SetMapRootY(map.GetMapRootY() + map.GetScrollAmount());
                     this.Refresh();
                     break;
             }
@@ -253,13 +253,13 @@ namespace MapMaker
                     Bitmap newImage = new Bitmap(Image.FromFile(selectImageDialog.FileName), ImagePalette.IMAGE_SIZE, ImagePalette.IMAGE_SIZE);
 
                      // Add it to the image palette
-                    testMap.GetImagePalette().AddNewImage(selectImageDialog.FileName, newImage);
+                    map.GetImagePalette().AddNewImage(selectImageDialog.FileName, newImage);
 
                     // Set the current paint layer.
-                    testMap.SetCurrentLayer(Map.LAYER.FLOOR);
+                    map.SetCurrentLayer(Map.LAYER.FLOOR);
 
                     // Set the current image to paint.
-                    testMap.GetImagePalette().SetCurrentImage(selectImageDialog.FileName);
+                    map.GetImagePalette().SetCurrentImage(selectImageDialog.FileName);
                 }
                 catch (Exception ex)
                 {
@@ -284,13 +284,13 @@ namespace MapMaker
                     Bitmap newImage = new Bitmap(Image.FromFile(selectImageDialog.FileName), ImagePalette.IMAGE_SIZE, ImagePalette.IMAGE_SIZE);
 
                     // Add it to the image palette
-                    testMap.GetImagePalette().AddNewImage(selectImageDialog.FileName, newImage);
+                    map.GetImagePalette().AddNewImage(selectImageDialog.FileName, newImage);
 
                     // Set the current paint layer.
-                    testMap.SetCurrentLayer(Map.LAYER.DECOR);
+                    map.SetCurrentLayer(Map.LAYER.DECOR);
 
                     // Set the current image to paint.
-                    testMap.GetImagePalette().SetCurrentImage(selectImageDialog.FileName);
+                    map.GetImagePalette().SetCurrentImage(selectImageDialog.FileName);
                 }
                 catch (Exception ex)
                 {
@@ -309,9 +309,9 @@ namespace MapMaker
             SetMouseLocation(MousePosition.X, MousePosition.Y);
 
             // Check if there is a current image selected. If there is, set the tile to it.
-            if (testMap.GetImagePalette().GetCurrentImage() != null)
+            if (map.GetImagePalette().GetCurrentImage() != null)
             {
-                testMap.GetClickedTile(mouseLocation).SetTileImage(testMap.GetCurrentLayer(), testMap.GetImagePalette().GetCurrentImage());
+                map.GetClickedTile(mouseLocation).SetTileImage(map.GetCurrentLayer(), map.GetImagePalette().GetCurrentImage());
                 Refresh();
             }            
         }
@@ -320,8 +320,15 @@ namespace MapMaker
             necessary offsets. */
         public void SetMouseLocation(int x, int y)
         {
-            mouseLocation.X = x - testMap.GetMapRootX() - Location.X - drawSurface.Location.X - X_OFFSET;
-            mouseLocation.Y = y - testMap.GetMapRootY() - Location.Y - drawSurface.Location.Y - Y_OFFSET;
+            mouseLocation.X = x - map.GetMapRootX() - Location.X - drawSurface.Location.X - X_OFFSET;
+            mouseLocation.Y = y - map.GetMapRootY() - Location.Y - drawSurface.Location.Y - Y_OFFSET;
+        }
+
+        // Sets the grid visibility to the opposite state of what it currently is.
+        private void gridMenuBar_Click(object sender, EventArgs e)
+        {
+            map.ToggleGrid();
+            Refresh();
         }
 
         /*************************************************************FILE HANDLING*/

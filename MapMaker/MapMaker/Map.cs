@@ -36,6 +36,9 @@ namespace MapMaker
             // The number of pixels the map moves when it is scrolled with the arrow keys.
             private int scrollAmount = 5;
 
+            // The files name of this map.
+            private String mapName;
+
         /***************************************IMAGE PALETTE*/
 
             // The object that stores all images used in the map.
@@ -82,6 +85,7 @@ namespace MapMaker
         public void     SetTileSize(int sizeOfTile)     { tileSize      =   sizeOfTile; }
         public int      GetTileSize()                   { return            tileSize; }
         public void     SetIsGridOn(bool isTheGridOn)   { isGridOn      =   isTheGridOn; }
+        public void     ToggleGrid()                    { isGridOn      =   !isGridOn; }
         public bool     IsGridOn()                      { return            isGridOn; }
         public void     SetMapRootX(int x)              { mapRootX      =   x; }
         public void     SetMapRootY(int y)              { mapRootY      =   y; }
@@ -94,6 +98,8 @@ namespace MapMaker
         public ImagePalette GetImagePalette()           { return            imagePalette; }
         public LAYER    GetCurrentLayer()               { return            currentLayer; }
         public void     SetCurrentLayer(LAYER l)        { currentLayer  =   l; }
+        public void     SetMapName(String name)         { mapName       =   name; }
+        public String   GetMapName()                    { return            mapName; }
 
         // Retreives the image for the tile at the specified index, on the specified layer.
         public Bitmap GetTileImage(int x, int y, Map.LAYER layer)

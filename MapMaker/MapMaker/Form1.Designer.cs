@@ -33,7 +33,16 @@
             this.floorButton = new System.Windows.Forms.Button();
             this.decorButton = new System.Windows.Forms.Button();
             this.toolTips = new System.Windows.Forms.ToolTip(this.components);
+            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.newMenuBar = new System.Windows.Forms.ToolStripMenuItem();
+            this.openMenuBar = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveMenuBar = new System.Windows.Forms.ToolStripMenuItem();
+            this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.gridMenuBar = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
+            this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // pictureBox
@@ -72,6 +81,71 @@
             this.decorButton.UseVisualStyleBackColor = true;
             this.decorButton.Click += new System.EventHandler(this.decorButton_Click);
             // 
+            // menuStrip1
+            // 
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.fileToolStripMenuItem,
+            this.editToolStripMenuItem,
+            this.viewToolStripMenuItem});
+            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.Size = new System.Drawing.Size(848, 24);
+            this.menuStrip1.TabIndex = 1;
+            this.menuStrip1.Text = "menuStrip1";
+            // 
+            // fileToolStripMenuItem
+            // 
+            this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.newMenuBar,
+            this.openMenuBar,
+            this.saveMenuBar});
+            this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
+            this.fileToolStripMenuItem.Text = "File";
+            // 
+            // newMenuBar
+            // 
+            this.newMenuBar.Name = "newMenuBar";
+            this.newMenuBar.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
+            this.newMenuBar.Size = new System.Drawing.Size(146, 22);
+            this.newMenuBar.Text = "New";
+            // 
+            // openMenuBar
+            // 
+            this.openMenuBar.Name = "openMenuBar";
+            this.openMenuBar.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
+            this.openMenuBar.Size = new System.Drawing.Size(146, 22);
+            this.openMenuBar.Text = "Open";
+            // 
+            // saveMenuBar
+            // 
+            this.saveMenuBar.Name = "saveMenuBar";
+            this.saveMenuBar.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
+            this.saveMenuBar.Size = new System.Drawing.Size(146, 22);
+            this.saveMenuBar.Text = "Save";
+            // 
+            // editToolStripMenuItem
+            // 
+            this.editToolStripMenuItem.Name = "editToolStripMenuItem";
+            this.editToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
+            this.editToolStripMenuItem.Text = "Edit";
+            // 
+            // viewToolStripMenuItem
+            // 
+            this.viewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.gridMenuBar});
+            this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
+            this.viewToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
+            this.viewToolStripMenuItem.Text = "View";
+            // 
+            // gridMenuBar
+            // 
+            this.gridMenuBar.Name = "gridMenuBar";
+            this.gridMenuBar.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.G)));
+            this.gridMenuBar.Size = new System.Drawing.Size(178, 22);
+            this.gridMenuBar.Text = "Toggle Grid";
+            this.gridMenuBar.Click += new System.EventHandler(this.gridMenuBar_Click);
+            // 
             // mainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -81,12 +155,17 @@
             this.Controls.Add(this.decorButton);
             this.Controls.Add(this.floorButton);
             this.Controls.Add(this.pictureBox);
+            this.Controls.Add(this.menuStrip1);
             this.KeyPreview = true;
+            this.MainMenuStrip = this.menuStrip1;
             this.Name = "mainForm";
             this.Text = "Map Maker";
             this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).EndInit();
+            this.menuStrip1.ResumeLayout(false);
+            this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -96,6 +175,14 @@
         private System.Windows.Forms.Button floorButton;
         private System.Windows.Forms.Button decorButton;
         private System.Windows.Forms.ToolTip toolTips;
+        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem newMenuBar;
+        private System.Windows.Forms.ToolStripMenuItem openMenuBar;
+        private System.Windows.Forms.ToolStripMenuItem saveMenuBar;
+        private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem viewToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem gridMenuBar;
 
     }
 }
