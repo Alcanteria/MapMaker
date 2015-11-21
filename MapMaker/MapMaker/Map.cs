@@ -37,7 +37,7 @@ namespace MapMaker
             private int scrollAmount = 5;
 
             // The files name of this map.
-            private String mapName;
+            private String mapName = null;
 
         /***************************************IMAGE PALETTE*/
 

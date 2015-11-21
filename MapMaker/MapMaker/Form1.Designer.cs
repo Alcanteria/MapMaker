@@ -41,6 +41,7 @@
             this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gridMenuBar = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveAsMenuBar = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -98,7 +99,8 @@
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.newMenuBar,
             this.openMenuBar,
-            this.saveMenuBar});
+            this.saveMenuBar,
+            this.saveAsMenuBar});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fileToolStripMenuItem.Text = "File";
@@ -107,22 +109,23 @@
             // 
             this.newMenuBar.Name = "newMenuBar";
             this.newMenuBar.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
-            this.newMenuBar.Size = new System.Drawing.Size(146, 22);
-            this.newMenuBar.Text = "New";
+            this.newMenuBar.Size = new System.Drawing.Size(195, 22);
+            this.newMenuBar.Text = "New...";
             // 
             // openMenuBar
             // 
             this.openMenuBar.Name = "openMenuBar";
             this.openMenuBar.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-            this.openMenuBar.Size = new System.Drawing.Size(146, 22);
-            this.openMenuBar.Text = "Open";
+            this.openMenuBar.Size = new System.Drawing.Size(195, 22);
+            this.openMenuBar.Text = "Open...";
             // 
             // saveMenuBar
             // 
             this.saveMenuBar.Name = "saveMenuBar";
             this.saveMenuBar.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.saveMenuBar.Size = new System.Drawing.Size(146, 22);
-            this.saveMenuBar.Text = "Save";
+            this.saveMenuBar.Size = new System.Drawing.Size(195, 22);
+            this.saveMenuBar.Text = "Save...";
+            this.saveMenuBar.Click += new System.EventHandler(this.saveMenuBar_Click);
             // 
             // editToolStripMenuItem
             // 
@@ -145,6 +148,14 @@
             this.gridMenuBar.Size = new System.Drawing.Size(178, 22);
             this.gridMenuBar.Text = "Toggle Grid";
             this.gridMenuBar.Click += new System.EventHandler(this.gridMenuBar_Click);
+            // 
+            // saveAsMenuBar
+            // 
+            this.saveAsMenuBar.Name = "saveAsMenuBar";
+            this.saveAsMenuBar.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+            | System.Windows.Forms.Keys.S)));
+            this.saveAsMenuBar.Size = new System.Drawing.Size(195, 22);
+            this.saveAsMenuBar.Text = "Save As...";
             // 
             // mainForm
             // 
@@ -183,6 +194,7 @@
         private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem viewToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem gridMenuBar;
+        private System.Windows.Forms.ToolStripMenuItem saveAsMenuBar;
 
     }
 }

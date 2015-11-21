@@ -42,6 +42,9 @@ namespace MapMaker
             // Dialog box for selecting image files.
             OpenFileDialog selectImageDialog = new OpenFileDialog();
 
+            // Dialog box for saving files.
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+
             // Pen for drawing the grid.
             Pen rectPen = new Pen(Color.Black);
 
@@ -82,6 +85,10 @@ namespace MapMaker
             // Open image dialog box properties
             selectImageDialog.Filter = "Image Files (*.bmp, *.gif, *.jpg, *.png)|*.bmp; *.gif; *.jpg; *.png";
             selectImageDialog.Multiselect = false;
+
+            // Save file dialog box properties.
+            saveFileDialog.Filter = "Text Files (*.txt)|*.txt";
+            saveFileDialog.RestoreDirectory = true;
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -331,7 +338,33 @@ namespace MapMaker
             Refresh();
         }
 
+        // Click on save menu item button.
+        private void saveMenuBar_Click(object sender, EventArgs e)
+        {
+            SaveMap();
+        }
+
         /*************************************************************FILE HANDLING*/
 
+        // Regular "Save" method.
+        public void SaveMap()
+        {
+            // Check if this map has a name, meaning it has been saved before. If it hasn't, promt the user to name it using the "SaveAs()" method.
+            if (map.GetMapName() == null)
+                SaveAs();
+            else
+                MapIO.SaveMap(map);
+        }
+
+        // Method for saving a map with a new name.
+        public void SaveAs()
+        {
+            // Prompt the user with a save file dialog box to get the path and file name for the map.
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            { 
+                map.SetMapName(saveFileDialog.FileName);
+                MapIO.SaveMap(map);
+            }
+        }
     }
 }
