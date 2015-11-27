@@ -68,12 +68,10 @@ namespace MapMaker
             SetRows(rows);
             SetIsGridOn(true);
 
-            // Initialize the Tile array based on the above dimensions.
-            TILES = new Tile[columns, rows];
-
-            for (int i = 0; i < columns; i++)
-                for (int j = 0; j < rows; j++)
-                    TILES[i, j] = new Tile();
+            // Check if the map's dimensions were set and build the map if they were.
+            if (columns > 0 && rows > 0)
+                RebuildMap();
+            
         }
 
         /**************************************ACCESSORS*/
@@ -117,7 +115,6 @@ namespace MapMaker
             if (x >= 0 && x <= (GetColumns() - 1) &&
                 y >= 0 && y <= (GetRows() - 1))
             {
-                Console.WriteLine("Clicked tile: " + x + "/" + y);
                 return GetTiles()[x, y];
             }
             else
@@ -125,6 +122,18 @@ namespace MapMaker
                 MessageBox.Show("Tile is out of bounds. You fucked up on your math in GetClickedTile()");
                 return GetTiles()[0, 0];
             }
+        }
+
+        // Rebuilds the tile array based. Usually called after the map's rows and columns have changed.
+        public void RebuildMap()
+        {
+            // Initialize the Tile array based on the above dimensions.
+            TILES = new Tile[columns, rows];
+
+            for (int i = 0; i < columns; i++)
+                for (int j = 0; j < rows; j++)
+                    TILES[i, j] = new Tile();
+
         }
 
     }

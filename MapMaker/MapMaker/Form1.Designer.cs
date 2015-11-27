@@ -119,6 +119,7 @@
             this.openMenuBar.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
             this.openMenuBar.Size = new System.Drawing.Size(195, 22);
             this.openMenuBar.Text = "Open...";
+            this.openMenuBar.Click += new System.EventHandler(this.openMenuBar_Click);
             // 
             // saveMenuBar
             // 

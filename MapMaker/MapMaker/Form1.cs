@@ -41,7 +41,7 @@ namespace MapMaker
             private Button DECOR_BUTTON;
 
             // Dialog box for selecting image files.
-            OpenFileDialog selectImageDialog = new OpenFileDialog();
+            OpenFileDialog selectFileDialog = new OpenFileDialog();
 
             // Dialog box for saving files.
             SaveFileDialog saveFileDialog = new SaveFileDialog();
@@ -86,8 +86,8 @@ namespace MapMaker
             drawSurface.Size = new Size((int)(Width * DRAWING_SURFACE_SCALE), (int)(Height * DRAWING_SURFACE_SCALE));
           
             // Open image dialog box properties
-            selectImageDialog.Filter = "Image Files (*.bmp, *.gif, *.jpg, *.png)|*.bmp; *.gif; *.jpg; *.png";
-            selectImageDialog.Multiselect = false;
+            selectFileDialog.Filter = "Image Files (*.bmp, *.gif, *.jpg, *.png)|*.bmp; *.gif; *.jpg; *.png";
+            selectFileDialog.Multiselect = false;
 
             // Save file dialog box properties.
             saveFileDialog.Filter = "Text Files (*.txt)|*.txt";
@@ -258,26 +258,26 @@ namespace MapMaker
         private void floorButton_Click(object sender, EventArgs e)
         {
             // Open the image select diaglog box and check if the user selected "OK"
-            if (selectImageDialog.ShowDialog() == DialogResult.OK)
+            if (selectFileDialog.ShowDialog() == DialogResult.OK)
             {
                 try
                 {
                     // Load the image
-                    Bitmap newImage = new Bitmap(Image.FromFile(selectImageDialog.FileName), ImagePalette.IMAGE_SIZE, ImagePalette.IMAGE_SIZE);
+                    Bitmap newImage = new Bitmap(Image.FromFile(selectFileDialog.FileName), ImagePalette.IMAGE_SIZE, ImagePalette.IMAGE_SIZE);
 
                      // Add it to the image palette
-                    map.GetImagePalette().AddNewImage(selectImageDialog.FileName, newImage);
+                    map.GetImagePalette().AddNewImage(selectFileDialog.FileName, newImage);
 
                     // Set the current paint layer.
                     map.SetCurrentLayer(Map.LAYER.FLOOR);
 
                     // Set the current image to paint.
-                    map.GetImagePalette().SetCurrentImage(selectImageDialog.FileName);
+                    map.GetImagePalette().SetCurrentImage(selectFileDialog.FileName);
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Could not load image: " + selectImageDialog.FileName);
-                    Console.WriteLine("Could not load image: " + selectImageDialog.FileName);
+                    MessageBox.Show("Could not load image: " + selectFileDialog.FileName);
+                    Console.WriteLine("Could not load image: " + selectFileDialog.FileName);
                     Console.WriteLine(ex.ToString());
                 }
 
@@ -288,26 +288,26 @@ namespace MapMaker
         private void wallButton_Click(object sender, EventArgs e)
         {
             // Open the image select diaglog box and check if the user selected "OK"
-            if (selectImageDialog.ShowDialog() == DialogResult.OK)
+            if (selectFileDialog.ShowDialog() == DialogResult.OK)
             {
                 try
                 {
                     // Load the image
-                    Bitmap newImage = new Bitmap(Image.FromFile(selectImageDialog.FileName), ImagePalette.IMAGE_SIZE, ImagePalette.IMAGE_SIZE);
+                    Bitmap newImage = new Bitmap(Image.FromFile(selectFileDialog.FileName), ImagePalette.IMAGE_SIZE, ImagePalette.IMAGE_SIZE);
 
                     // Add it to the image palette
-                    map.GetImagePalette().AddNewImage(selectImageDialog.FileName, newImage);
+                    map.GetImagePalette().AddNewImage(selectFileDialog.FileName, newImage);
 
                     // Set the current paint layer.
                     map.SetCurrentLayer(Map.LAYER.WALL);
 
                     // Set the current image to paint.
-                    map.GetImagePalette().SetCurrentImage(selectImageDialog.FileName);
+                    map.GetImagePalette().SetCurrentImage(selectFileDialog.FileName);
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Could not load image: " + selectImageDialog.FileName);
-                    Console.WriteLine("Could not load image: " + selectImageDialog.FileName);
+                    MessageBox.Show("Could not load image: " + selectFileDialog.FileName);
+                    Console.WriteLine("Could not load image: " + selectFileDialog.FileName);
                     Console.WriteLine(ex.ToString());
                 }
 
@@ -318,26 +318,26 @@ namespace MapMaker
         private void decorButton_Click(object sender, EventArgs e)
         {
             // Open the image select diaglog box and check if the user selected "OK"
-            if (selectImageDialog.ShowDialog() == DialogResult.OK)
+            if (selectFileDialog.ShowDialog() == DialogResult.OK)
             {
                 try
                 {
                     // Load the image
-                    Bitmap newImage = new Bitmap(Image.FromFile(selectImageDialog.FileName), ImagePalette.IMAGE_SIZE, ImagePalette.IMAGE_SIZE);
+                    Bitmap newImage = new Bitmap(Image.FromFile(selectFileDialog.FileName), ImagePalette.IMAGE_SIZE, ImagePalette.IMAGE_SIZE);
 
                     // Add it to the image palette
-                    map.GetImagePalette().AddNewImage(selectImageDialog.FileName, newImage);
+                    map.GetImagePalette().AddNewImage(selectFileDialog.FileName, newImage);
 
                     // Set the current paint layer.
                     map.SetCurrentLayer(Map.LAYER.DECOR);
 
                     // Set the current image to paint.
-                    map.GetImagePalette().SetCurrentImage(selectImageDialog.FileName);
+                    map.GetImagePalette().SetCurrentImage(selectFileDialog.FileName);
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Could not load image: " + selectImageDialog.FileName);
-                    Console.WriteLine("Could not load image: " + selectImageDialog.FileName);
+                    MessageBox.Show("Could not load image: " + selectFileDialog.FileName);
+                    Console.WriteLine("Could not load image: " + selectFileDialog.FileName);
                     Console.WriteLine(ex.ToString());
                 }
 
@@ -399,6 +399,25 @@ namespace MapMaker
             { 
                 map.SetMapName(saveFileDialog.FileName);
                 MapIO.SaveMap(map);
+            }
+        }
+
+        // Method for loading a saved map.
+        private void openMenuBar_Click(object sender, EventArgs e)
+        {
+            // Open the file select diaglog box and check if the user selected "OK"
+            if (selectFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                try
+                {
+                    map = MapIO.LoadMap(selectFileDialog.FileName);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Could not load map: " + selectFileDialog.FileName);
+                    Console.WriteLine(ex.ToString());
+                }
+
             }
         }
     }
