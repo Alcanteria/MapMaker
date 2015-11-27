@@ -69,17 +69,11 @@ namespace MapMaker
          Returns a default image if the passed image name is not found in the library. */
         public Bitmap GetImage(String name)
         {
-            // Make sure a null argument wasn't passed, and see if "name" is in the library.
             if (name != null)
-            {
                 if (images.ContainsKey(name))
                     return images[name];
-                else
-                    Console.WriteLine(name + " could not be found in image library.");
-            }
 
             return images[Map.GetDefaultImage()];
-
         }
     }
 }

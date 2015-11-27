@@ -37,6 +37,7 @@ namespace MapMaker
 
             // Declare versions of buttons to interact with.
             private Button FLOOR_BUTTON;
+            private Button WALL_BUTTON;
             private Button DECOR_BUTTON;
 
             // Dialog box for selecting image files.
@@ -69,10 +70,12 @@ namespace MapMaker
 
             // Add the key listeners to the buttons on the form. This is to filter out arrow key presses when a button is selected.
             floorButton.PreviewKeyDown += new PreviewKeyDownEventHandler(floorButton_PreviewKeyDown);
+            wallButton.PreviewKeyDown += new PreviewKeyDownEventHandler(wallButton_PreviewKeyDown);
             decorButton.PreviewKeyDown += new PreviewKeyDownEventHandler(decorButton_PreviewKeyDown);
 
             // Link our buttons to the form buttons
             FLOOR_BUTTON = floorButton;
+            WALL_BUTTON = wallButton;
             DECOR_BUTTON = decorButton;
 
             // Adjust the size of the main window based on the scale we've set above.
@@ -98,7 +101,8 @@ namespace MapMaker
 
             // Set the location of the buttons.
             FLOOR_BUTTON.Location = new Point(20, 50);
-            DECOR_BUTTON.Location = new Point(FLOOR_BUTTON.Location.X, FLOOR_BUTTON.Location.Y + (FLOOR_BUTTON.Height + 5));
+            WALL_BUTTON.Location = new Point(FLOOR_BUTTON.Location.X, FLOOR_BUTTON.Location.Y + (FLOOR_BUTTON.Height + 5));
+            DECOR_BUTTON.Location = new Point(FLOOR_BUTTON.Location.X, WALL_BUTTON.Location.Y + (WALL_BUTTON.Height + 5));
 
             // Set the starting location of the drawing space. This is based off of the location of the buttons.
             drawSurface.Location = new Point(FLOOR_BUTTON.Location.X + (FLOOR_BUTTON.Width + 5), FLOOR_BUTTON.Location.Y);            
@@ -116,43 +120,34 @@ namespace MapMaker
             Graphics g = e.Graphics;
 
             /******************************************** DRAW TILES*/
-                
-                // Floor layer
+
+            /* This is a work around for not being able to iterate through elements in an Enum. We have to create a string
+                array that contains the names of each element in the enum, then cycle through each element in the string array instead. */
+            String[] LAYERS = Enum.GetNames(typeof(Map.LAYER));
+
+            // Draw each layer of the map separately, starting with the floor.
+            foreach (String currentElement in LAYERS)
+            {
+                // Convert the current element string to our Enum type "Layer"
+                Map.LAYER THIS_LAYER = (Map.LAYER)Enum.Parse(typeof(Map.LAYER), currentElement);
+
+                // Iterate through every tile and draw its appropriate layer image.
                 for (int i = 0; i < map.GetColumns(); i++)
                 {
                     for (int j = 0; j < map.GetRows(); j++)
                     {
-                        /* Draw the tiles dynamically based on where they are in the grid, 
-                            and where the map root is set. 
-                           This is the BOTTOM, or floor layer. This will always draw something. */
-                        g.DrawImage(map.GetTileImage(i, j, Map.LAYER.FLOOR),
-                                    (i * map.GetTileSize()) + map.GetMapRootX(),
-                                    (j * map.GetTileSize()) + map.GetMapRootY(),
-                                    map.GetTileSize(),
-                                    map.GetTileSize());
-                    }
-                }
-
-                // Decor layer
-                for (int i = 0; i < map.GetColumns(); i++)
-                {
-                    for (int j = 0; j < map.GetRows(); j++)
-                    {
-                        /* Draw the tiles dynamically based on where they are in the grid, 
-                            and where the map root is set. 
-                           This is the TOP, or decor layer. This will only draw something if there is an
-                           image specified for this layer. */
-
-                        if (map.GetTiles()[i, j].GetTileImage(Map.LAYER.DECOR) != null) 
+                        // Check if this layer is not the floor. If it is, just draw it and don't worry about anything else.
+                        if (THIS_LAYER != Map.LAYER.FLOOR)
                         {
-                            g.DrawImage(map.GetTileImage(i, j, Map.LAYER.DECOR),
-                                        (i * map.GetTileSize()) + map.GetMapRootX(),
-                                        (j * map.GetTileSize()) + map.GetMapRootY(),
-                                        map.GetTileSize(),
-                                        map.GetTileSize());
+                            // If this layer isn't the floor, make sure it isn't empty before you draw it.
+                            if (!map.GetTiles()[i, j].IsTileLayerEmpty(THIS_LAYER))
+                                DrawTile(g, i, j, THIS_LAYER);
                         }
+                        else
+                            DrawTile(g, i, j, THIS_LAYER);
                     }
                 }
+            }
 
             // Draw the grid if it is turned on.
             if (map.IsGridOn())
@@ -171,6 +166,16 @@ namespace MapMaker
             }
         }
 
+        // Cycle through each tile in the map and draw it.
+        private void DrawTile(Graphics g, int x, int y, Map.LAYER layer)
+        {
+            g.DrawImage(map.GetTileImage(x, y, layer),
+                (x * map.GetTileSize()) + map.GetMapRootX(),
+                (y * map.GetTileSize()) + map.GetMapRootY(),
+                     map.GetTileSize(),
+                     map.GetTileSize());
+        }
+
         /***************************************************************KEYBOARD EVENTS*/
 
         // Handles Alpha-Numeric key presses.
@@ -178,6 +183,7 @@ namespace MapMaker
 
         // This filters out arrow key presses when this button is selected on the windows form.
         private void floorButton_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e) { CheckForArrowKeys(e); }
+        private void wallButton_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e) { CheckForArrowKeys(e); }
         private void decorButton_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e) { CheckForArrowKeys(e); }
 
         /* If a non Alpha-Numeric key press is detected in IsInputKey() above, this is where
@@ -248,7 +254,7 @@ namespace MapMaker
 
         /*************************************************************MOUSE CLICKS*/
 
-        // Click event for the floor select button.
+        // Click event for the FLOOR select button.
         private void floorButton_Click(object sender, EventArgs e)
         {
             // Open the image select diaglog box and check if the user selected "OK"
@@ -279,7 +285,36 @@ namespace MapMaker
 
         }
 
-        // Click event for the decor select button.
+        private void wallButton_Click(object sender, EventArgs e)
+        {
+            // Open the image select diaglog box and check if the user selected "OK"
+            if (selectImageDialog.ShowDialog() == DialogResult.OK)
+            {
+                try
+                {
+                    // Load the image
+                    Bitmap newImage = new Bitmap(Image.FromFile(selectImageDialog.FileName), ImagePalette.IMAGE_SIZE, ImagePalette.IMAGE_SIZE);
+
+                    // Add it to the image palette
+                    map.GetImagePalette().AddNewImage(selectImageDialog.FileName, newImage);
+
+                    // Set the current paint layer.
+                    map.SetCurrentLayer(Map.LAYER.WALL);
+
+                    // Set the current image to paint.
+                    map.GetImagePalette().SetCurrentImage(selectImageDialog.FileName);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Could not load image: " + selectImageDialog.FileName);
+                    Console.WriteLine("Could not load image: " + selectImageDialog.FileName);
+                    Console.WriteLine(ex.ToString());
+                }
+
+            }
+        }
+
+        // Click event for the DECOR select button.
         private void decorButton_Click(object sender, EventArgs e)
         {
             // Open the image select diaglog box and check if the user selected "OK"

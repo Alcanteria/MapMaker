@@ -53,7 +53,7 @@ namespace MapMaker
             private Tile[,] TILES;
 
             // Different "states" of tiles. Determines where the current tile image goes on the map layer.
-            public enum LAYER { FLOOR, DECOR, NONE };
+            public enum LAYER { FLOOR, WALL, DECOR };
 
             // Current layer the tiles are being placed on.
             private LAYER currentLayer;
@@ -104,7 +104,7 @@ namespace MapMaker
         // Retreives the image for the tile at the specified index, on the specified layer.
         public Bitmap GetTileImage(int x, int y, Map.LAYER layer)
         {
-            return imagePalette.GetImage(TILES[x, y].GetTileImage(layer));
+            return imagePalette.GetImage(TILES[x, y].GetTileImageKey(layer));
         }
 
         // Returns the tile that was clicked by the user.

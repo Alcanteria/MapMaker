@@ -38,10 +38,11 @@
             this.newMenuBar = new System.Windows.Forms.ToolStripMenuItem();
             this.openMenuBar = new System.Windows.Forms.ToolStripMenuItem();
             this.saveMenuBar = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveAsMenuBar = new System.Windows.Forms.ToolStripMenuItem();
             this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gridMenuBar = new System.Windows.Forms.ToolStripMenuItem();
-            this.saveAsMenuBar = new System.Windows.Forms.ToolStripMenuItem();
+            this.wallButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -72,7 +73,7 @@
             // decorButton
             // 
             this.decorButton.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.decorButton.Location = new System.Drawing.Point(13, 76);
+            this.decorButton.Location = new System.Drawing.Point(13, 119);
             this.decorButton.Name = "decorButton";
             this.decorButton.Size = new System.Drawing.Size(111, 25);
             this.decorButton.TabIndex = 0;
@@ -127,6 +128,14 @@
             this.saveMenuBar.Text = "Save...";
             this.saveMenuBar.Click += new System.EventHandler(this.saveMenuBar_Click);
             // 
+            // saveAsMenuBar
+            // 
+            this.saveAsMenuBar.Name = "saveAsMenuBar";
+            this.saveAsMenuBar.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+            | System.Windows.Forms.Keys.S)));
+            this.saveAsMenuBar.Size = new System.Drawing.Size(195, 22);
+            this.saveAsMenuBar.Text = "Save As...";
+            // 
             // editToolStripMenuItem
             // 
             this.editToolStripMenuItem.Name = "editToolStripMenuItem";
@@ -149,13 +158,16 @@
             this.gridMenuBar.Text = "Toggle Grid";
             this.gridMenuBar.Click += new System.EventHandler(this.gridMenuBar_Click);
             // 
-            // saveAsMenuBar
+            // wallButton
             // 
-            this.saveAsMenuBar.Name = "saveAsMenuBar";
-            this.saveAsMenuBar.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
-            | System.Windows.Forms.Keys.S)));
-            this.saveAsMenuBar.Size = new System.Drawing.Size(195, 22);
-            this.saveAsMenuBar.Text = "Save As...";
+            this.wallButton.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.wallButton.Location = new System.Drawing.Point(13, 77);
+            this.wallButton.Name = "wallButton";
+            this.wallButton.Size = new System.Drawing.Size(111, 23);
+            this.wallButton.TabIndex = 2;
+            this.wallButton.Text = "Wall";
+            this.wallButton.UseVisualStyleBackColor = true;
+            this.wallButton.Click += new System.EventHandler(this.wallButton_Click);
             // 
             // mainForm
             // 
@@ -163,6 +175,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.WindowFrame;
             this.ClientSize = new System.Drawing.Size(848, 522);
+            this.Controls.Add(this.wallButton);
             this.Controls.Add(this.decorButton);
             this.Controls.Add(this.floorButton);
             this.Controls.Add(this.pictureBox);
@@ -195,6 +208,7 @@
         private System.Windows.Forms.ToolStripMenuItem viewToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem gridMenuBar;
         private System.Windows.Forms.ToolStripMenuItem saveAsMenuBar;
+        private System.Windows.Forms.Button wallButton;
 
     }
 }
