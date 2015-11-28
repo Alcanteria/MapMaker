@@ -43,6 +43,7 @@
             this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gridMenuBar = new System.Windows.Forms.ToolStripMenuItem();
             this.wallButton = new System.Windows.Forms.Button();
+            this.testButtonMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -139,6 +140,8 @@
             // 
             // editToolStripMenuItem
             // 
+            this.editToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.testButtonMenuItem});
             this.editToolStripMenuItem.Name = "editToolStripMenuItem";
             this.editToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
             this.editToolStripMenuItem.Text = "Edit";
@@ -169,6 +172,13 @@
             this.wallButton.Text = "Wall";
             this.wallButton.UseVisualStyleBackColor = true;
             this.wallButton.Click += new System.EventHandler(this.wallButton_Click);
+            // 
+            // testButtonMenuItem
+            // 
+            this.testButtonMenuItem.Name = "testButtonMenuItem";
+            this.testButtonMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.testButtonMenuItem.Text = "Test Button";
+            this.testButtonMenuItem.Click += new System.EventHandler(this.testButtonMenuItem_Click);
             // 
             // mainForm
             // 
@@ -210,6 +220,7 @@
         private System.Windows.Forms.ToolStripMenuItem gridMenuBar;
         private System.Windows.Forms.ToolStripMenuItem saveAsMenuBar;
         private System.Windows.Forms.Button wallButton;
+        private System.Windows.Forms.ToolStripMenuItem testButtonMenuItem;
 
     }
 }

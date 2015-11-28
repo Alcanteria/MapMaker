@@ -22,6 +22,8 @@ namespace MapMaker
         public Tile() 
         {
             images = new String[3];
+            for (int i = 0; i < images.Length; i++)
+                images[i] = Tile.NO_IMAGE;
         }
 
         // Adds an image to the first layer of the tile. Used for the floor.

@@ -12,6 +12,14 @@ namespace MapMaker
     /* This class handles saving/loading map files from local disk space. */
     static class MapIO
     {
+        /**********************SPECIAL CHARACTERS*/
+        public static String COMMENT        = @"//";
+        public static String IMAGE_LOAD     = "<IMAGES>";
+        public static String IMAGE_CLOSE    = "<IMAGES_END>";
+        public static String MAP_LOAD       = "<MAP>";
+        public static String MAP_CLOSE      = "<MAP_END>";
+        public static String CLOSE_FILE     = "<END>";
+
         /********************************OUTPUT*/
         // Saves the supplied map to the supplied mapName path.
         public static void SaveMap(Map map)
@@ -28,15 +36,15 @@ namespace MapMaker
             /*********************************BUILD OUTPUT STRING*/
 
                 // Begin by writing a commented title to the text file.
-                imageNames.AppendLine("// Map file for: " + Path.GetFileNameWithoutExtension(map.GetMapName()));
+                imageNames.AppendLine(MapIO.COMMENT + " Map file for: " + Path.GetFileNameWithoutExtension(map.GetMapName()));
                 imageNames.AppendLine();
 
                 // Let the map loader know it's tile to load images.
-                imageNames.AppendLine("IMAGES");
+                imageNames.AppendLine(MapIO.IMAGE_LOAD);
 
                 // Let the map loader know it's time to load the map information.
                 guts.AppendLine();
-                guts.AppendLine("MAP");
+                guts.AppendLine(MapIO.MAP_LOAD);
 
                 // Write map dimensions.
                 guts.AppendLine("" + map.GetColumns());
@@ -64,14 +72,21 @@ namespace MapMaker
                     }
                 }
 
+                // Mark the end of the map load.
+                guts.AppendLine(MapIO.MAP_CLOSE);
+
                 // Mark the end of the save file.
-                guts.AppendLine("END");
+                guts.AppendLine(MapIO.CLOSE_FILE);
 
                 // Write down all of the images used in this map.
                 foreach (String name in images)
                 {
-                    imageNames.AppendLine("" + name);
+                    if(name != Tile.NO_IMAGE)
+                        imageNames.AppendLine("" + name);
                 }
+
+                // Terminate the image load sequence.
+                imageNames.AppendLine(MapIO.IMAGE_CLOSE);
 
                 imageNames.Append(guts.ToString());
 
@@ -107,18 +122,22 @@ namespace MapMaker
             // Go through each line of the map file and process each command appropriately.
             while ((line = file.ReadLine()) != null)
             {
-                /**************************************COMMENT*/
-                if(line.StartsWith(@"//"))
+                /*************************************FILE END*/
+                if (line.StartsWith(MapIO.CLOSE_FILE))
+                    break;
+
+                /*************************************COMMENTS*/
+                if (line.StartsWith(MapIO.COMMENT))
                     continue;
 
                 /************************************LOAD IMAGES*/
-                if(line.StartsWith("IMAGES"))
+                if(line.StartsWith(MapIO.IMAGE_LOAD))
                 {
                     // Cycle to the next line
                     line = file.ReadLine();
 
-                    // Keep loading each line as an image until you reach a blank line.
-                    while (line != "")
+                    // Keep loading each line as an image until you reach the end.
+                    while (line != MapIO.IMAGE_CLOSE)
                     {
                         try
                         {
@@ -128,15 +147,17 @@ namespace MapMaker
                         catch (Exception e)
                         {
                             Console.WriteLine("Could not load image: " + line);
+                            Console.WriteLine("" + e.ToString());
                         }
 
                         // Make sure you cycle to the next line in the file before you restart the loop.
                         line = file.ReadLine();
                     }
+                    continue;
                 }
 
                 /************************************LOAD MAP*/
-                if (line.StartsWith("MAP"))
+                if (line.StartsWith(MapIO.MAP_LOAD))
                 {
                     // Cycle to the next line, which is the beginning of the map attributes.
                     line = file.ReadLine();
@@ -151,9 +172,38 @@ namespace MapMaker
                     newMap.SetColumns(colomns);
                     newMap.SetRows(rows);
                     newMap.RebuildMap();
+
+                    // Loop through every tile and set its images.
+                    while (line != MapIO.MAP_CLOSE)
+                    {
+                        for (int i = 0; i < newMap.GetColumns(); i++)
+                        {
+                            for (int j = 0; j < newMap.GetRows(); j++)
+                            {
+                                // Read the tile coordinates and advance the line reader as necessary.
+                                int x = Int32.Parse(line);
+                                    line = file.ReadLine();
+                                int y = Int32.Parse(line);
+                                    line = file.ReadLine();
+
+                                    // Loop through each layer of the tile and set its image.
+                                    for (int n = 0; n < Map.NUMBER_OF_LAYERS; n++)
+                                    {
+                                        newMap.GetTiles()[x, y].SetTileImage((Map.LAYER)n, line);
+                                        line = file.ReadLine();
+                                    }
+                            }
+                        }
+                    }
+                    continue;
                 }
 
             }
+
+            // Shut the door.
+            file.Close();
+
+            return newMap;
         }
     }
 }

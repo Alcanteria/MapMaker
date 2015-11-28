@@ -55,6 +55,9 @@ namespace MapMaker
             // Different "states" of tiles. Determines where the current tile image goes on the map layer.
             public enum LAYER { FLOOR, WALL, DECOR };
 
+            // The number of layers in the map.
+            public static int NUMBER_OF_LAYERS;
+
             // Current layer the tiles are being placed on.
             private LAYER currentLayer;
 
@@ -71,7 +74,12 @@ namespace MapMaker
             // Check if the map's dimensions were set and build the map if they were.
             if (columns > 0 && rows > 0)
                 RebuildMap();
-            
+
+            /* This is a really dumb way to automatically count how many layers there are in the map.
+             I coudn't find a decent way to to do that dynamically and it was too expensive to poll
+             this value on every iteration of a loop, so I'm doing this on load and saving the value
+             for all to share. */
+            NUMBER_OF_LAYERS = Enum.GetValues(typeof(Map.LAYER)).Length;
         }
 
         /**************************************ACCESSORS*/
@@ -119,7 +127,7 @@ namespace MapMaker
             }
             else
             {
-                MessageBox.Show("Tile is out of bounds. You fucked up on your math in GetClickedTile()");
+                MessageBox.Show("Tile is out of bounds. Changed top left tile instead, loser.");
                 return GetTiles()[0, 0];
             }
         }
@@ -127,14 +135,20 @@ namespace MapMaker
         // Rebuilds the tile array based. Usually called after the map's rows and columns have changed.
         public void RebuildMap()
         {
+            /* Check to make sure the values for rows and columns are't negative numbers or zero. 
+             Set them to 1 if they are. */
+            if (GetRows() <= 0)
+                SetRows(1);
+
+            if (GetColumns() <= 0)
+                SetColumns(1);
+
             // Initialize the Tile array based on the above dimensions.
             TILES = new Tile[columns, rows];
 
             for (int i = 0; i < columns; i++)
                 for (int j = 0; j < rows; j++)
                     TILES[i, j] = new Tile();
-
         }
-
     }
 }
