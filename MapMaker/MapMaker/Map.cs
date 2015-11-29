@@ -34,7 +34,7 @@ namespace MapMaker
             private int mapRootY;
 
             // The number of pixels the map moves when it is scrolled with the arrow keys.
-            private int scrollAmount = 5;
+            private int scrollAmount = 10;
 
             // The files name of this map.
             private String mapName = null;

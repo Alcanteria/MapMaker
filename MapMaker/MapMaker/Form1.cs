@@ -52,6 +52,9 @@ namespace MapMaker
             // Dialog box for exporting image files.
             SaveFileDialog exportFileDialog = new SaveFileDialog();
 
+            // Dialog for creating a new map.
+            private newMapDialog createMapDialog;
+
             // Pen for drawing the grid.
             Pen rectPen = new Pen(Color.Black);
 
@@ -105,6 +108,10 @@ namespace MapMaker
 
             // Export file dialog box properties.
             exportFileDialog.Filter = "Image Files (*.png)|*.png";
+
+            // Initiialize the new map dialog box.
+            createMapDialog = new newMapDialog(this);
+
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -415,6 +422,13 @@ namespace MapMaker
             }
         }
 
+        // Method for creating a new blank map.
+        public void CreateNewMap(int x, int y)
+        {
+            map = new Map(x, y);
+            Refresh();
+        }
+
         // Method for loading a saved map.
         private void openMenuBar_Click(object sender, EventArgs e)
         {
@@ -435,13 +449,27 @@ namespace MapMaker
             }
         }
 
-        /***********************************TEST BUTTON*/
-        private void testButtonMenuItem_Click(object sender, EventArgs e)
+        /* Shows the dialog box to configure a new map. */
+        private void newMenuBar_Click(object sender, EventArgs e)
+        {
+            createMapDialog.Show();
+        }
+
+        /* Exports the map to a png file named by the user. */
+        private void exportMenuBar_Click(object sender, EventArgs e)
         {
             if (exportFileDialog.ShowDialog() == DialogResult.OK)
             {
                 MapIO.ExportMap(map, exportFileDialog.FileName);
             }
         }
+
+        /***********************************TEST BUTTON*/
+        private void testButtonMenuItem_Click(object sender, EventArgs e){ }
+            
+
+        
+        
+
     }
 }

@@ -40,10 +40,11 @@
             this.saveMenuBar = new System.Windows.Forms.ToolStripMenuItem();
             this.saveAsMenuBar = new System.Windows.Forms.ToolStripMenuItem();
             this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.testButtonMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gridMenuBar = new System.Windows.Forms.ToolStripMenuItem();
             this.wallButton = new System.Windows.Forms.Button();
-            this.testButtonMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.exportMenuBar = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -102,7 +103,8 @@
             this.newMenuBar,
             this.openMenuBar,
             this.saveMenuBar,
-            this.saveAsMenuBar});
+            this.saveAsMenuBar,
+            this.exportMenuBar});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fileToolStripMenuItem.Text = "File";
@@ -113,6 +115,7 @@
             this.newMenuBar.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
             this.newMenuBar.Size = new System.Drawing.Size(195, 22);
             this.newMenuBar.Text = "New...";
+            this.newMenuBar.Click += new System.EventHandler(this.newMenuBar_Click);
             // 
             // openMenuBar
             // 
@@ -146,6 +149,13 @@
             this.editToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
             this.editToolStripMenuItem.Text = "Edit";
             // 
+            // testButtonMenuItem
+            // 
+            this.testButtonMenuItem.Name = "testButtonMenuItem";
+            this.testButtonMenuItem.Size = new System.Drawing.Size(135, 22);
+            this.testButtonMenuItem.Text = "Test Button";
+            this.testButtonMenuItem.Click += new System.EventHandler(this.testButtonMenuItem_Click);
+            // 
             // viewToolStripMenuItem
             // 
             this.viewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -173,12 +183,13 @@
             this.wallButton.UseVisualStyleBackColor = true;
             this.wallButton.Click += new System.EventHandler(this.wallButton_Click);
             // 
-            // testButtonMenuItem
+            // exportMenuBar
             // 
-            this.testButtonMenuItem.Name = "testButtonMenuItem";
-            this.testButtonMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.testButtonMenuItem.Text = "Test Button";
-            this.testButtonMenuItem.Click += new System.EventHandler(this.testButtonMenuItem_Click);
+            this.exportMenuBar.Name = "exportMenuBar";
+            this.exportMenuBar.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.E)));
+            this.exportMenuBar.Size = new System.Drawing.Size(195, 22);
+            this.exportMenuBar.Text = "Export...";
+            this.exportMenuBar.Click += new System.EventHandler(this.exportMenuBar_Click);
             // 
             // mainForm
             // 
@@ -221,6 +232,7 @@
         private System.Windows.Forms.ToolStripMenuItem saveAsMenuBar;
         private System.Windows.Forms.Button wallButton;
         private System.Windows.Forms.ToolStripMenuItem testButtonMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem exportMenuBar;
 
     }
 }
