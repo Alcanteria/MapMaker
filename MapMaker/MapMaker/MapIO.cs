@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 using System.Drawing;
+using System.Drawing.Imaging;
 
 namespace MapMaker
 {
@@ -21,6 +22,10 @@ namespace MapMaker
         public static String CLOSE_FILE     = "<END>";
 
         /********************************OUTPUT*/
+        /********************************OUTPUT*/
+        /********************************OUTPUT*/
+        /********************************OUTPUT*/
+
         // Saves the supplied map to the supplied mapName path.
         public static void SaveMap(Map map)
         {
@@ -106,7 +111,43 @@ namespace MapMaker
             }
         }
 
-        /********************************MORE INPUUUUUT*/
+        /* Exports the map to an image file. */
+        public static void ExportMap(Map map, String fileName)
+        {
+            // Create an emtpy bitmap based on the dimentions of the supplied map.
+            Bitmap newBitmap = new Bitmap(map.GetColumns() * ImagePalette.IMAGE_SIZE, map.GetRows() * ImagePalette.IMAGE_SIZE, PixelFormat.Format32bppPArgb);
+            
+            // Create a temporary bitmap to copy pixels from.
+            Bitmap floorImage = map.GetTileImage(0, 0, Map.LAYER.FLOOR);
+            Bitmap wallImage = map.GetTileImage(0, 0, Map.LAYER.WALL);
+
+            // Loop through the original image and copy its pixels to the new image.
+            for(int i = 0; i < floorImage.Width; i++)
+            {
+                for (int j = 0; j < floorImage.Height; j++)
+                {
+                    Color bottomColor = floorImage.GetPixel(i, j);
+                    Color topColor = wallImage.GetPixel(i, j);
+
+                    byte A = (byte)(topColor.A + (bottomColor.A * (255 - topColor.A) / 255));
+                    byte R = (byte)((topColor.R * topColor.A / 255) + (bottomColor.R * bottomColor.A * (255 - topColor.A) / (255 * 255)));
+                    byte G = (byte)((topColor.G * topColor.A / 255) + (bottomColor.G * bottomColor.A * (255 - topColor.A) / (255 * 255)));
+                    byte B = (byte)((topColor.B * topColor.A / 255) + (bottomColor.B * bottomColor.A * (255 - topColor.A) / (255 * 255)));
+
+                    Color newColor = Color.FromArgb(A, R, G, B);
+
+                    newBitmap.SetPixel(i, j, newColor);
+                }
+            }
+
+            newBitmap.Save(fileName, ImageFormat.Png);
+        }
+
+        /********************************INPUT*/
+        /********************************INPUT*/
+        /********************************INPUT*/
+        /********************************INPUT*/
+
         // Returns a new map object based on the settings in the passed map path name.
         public static Map LoadMap(String map)
         {

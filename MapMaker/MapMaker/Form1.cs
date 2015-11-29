@@ -49,6 +49,9 @@ namespace MapMaker
             // Dialog box for saving files.
             SaveFileDialog saveFileDialog = new SaveFileDialog();
 
+            // Dialog box for exporting image files.
+            SaveFileDialog exportFileDialog = new SaveFileDialog();
+
             // Pen for drawing the grid.
             Pen rectPen = new Pen(Color.Black);
 
@@ -99,6 +102,9 @@ namespace MapMaker
             // Save file dialog box properties.
             saveFileDialog.Filter = "Text Files (*.txt)|*.txt";
             saveFileDialog.RestoreDirectory = true;
+
+            // Export file dialog box properties.
+            exportFileDialog.Filter = "Image Files (*.png)|*.png";
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -432,7 +438,10 @@ namespace MapMaker
         /***********************************TEST BUTTON*/
         private void testButtonMenuItem_Click(object sender, EventArgs e)
         {
-            
+            if (exportFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                MapIO.ExportMap(map, exportFileDialog.FileName);
+            }
         }
     }
 }
