@@ -117,30 +117,74 @@ namespace MapMaker
             // Create an emtpy bitmap based on the dimentions of the supplied map.
             Bitmap newBitmap = new Bitmap(map.GetColumns() * ImagePalette.IMAGE_SIZE, map.GetRows() * ImagePalette.IMAGE_SIZE, PixelFormat.Format32bppPArgb);
             
+            // Bytes to store the color value for each pixel's ARGB value.
+            byte A;
+            byte R;
+            byte G;
+            byte B;
+
             // Create a temporary bitmap to copy pixels from.
-            Bitmap floorImage = map.GetTileImage(0, 0, Map.LAYER.FLOOR);
-            Bitmap wallImage = map.GetTileImage(0, 0, Map.LAYER.WALL);
+            Bitmap bottomImage;
+            Bitmap topImage;
 
-            // Loop through the original image and copy its pixels to the new image.
-            for(int i = 0; i < floorImage.Width; i++)
+            /* Loop through every tile in the map, blend each of its pixels layers together 
+             * and copy the new pixel to the composite image. */
+
+            // Columns ***************************************************
+            for (int i = 0; i < map.GetColumns(); i++)
             {
-                for (int j = 0; j < floorImage.Height; j++)
+                // Rows ***************************************************
+                for (int j = 0; j < map.GetRows(); j++)
                 {
-                    Color bottomColor = floorImage.GetPixel(i, j);
-                    Color topColor = wallImage.GetPixel(i, j);
+                    // Get the image for the floor layer
+                    bottomImage = map.GetTileImage(i, j, Map.LAYER.FLOOR);
 
-                    byte A = (byte)(topColor.A + (bottomColor.A * (255 - topColor.A) / 255));
-                    byte R = (byte)((topColor.R * topColor.A / 255) + (bottomColor.R * bottomColor.A * (255 - topColor.A) / (255 * 255)));
-                    byte G = (byte)((topColor.G * topColor.A / 255) + (bottomColor.G * bottomColor.A * (255 - topColor.A) / (255 * 255)));
-                    byte B = (byte)((topColor.B * topColor.A / 255) + (bottomColor.B * bottomColor.A * (255 - topColor.A) / (255 * 255)));
+                    // Loop through image layers **********************************
+                    for (int z = 0; z < Map.NUMBER_OF_LAYERS; z++)
+                    {
+                        // Make sure there is another layer on top of this one before trying to check it.
+                        if (z + 1 < Map.NUMBER_OF_LAYERS)
+                        {
+                            // Check if the next layer up has an image and assign it to the top image if there is.
+                            if (!map.GetTiles()[i, j].IsTileLayerEmpty((Map.LAYER)z + 1))
+                            {
+                                topImage = map.GetTileImage(i, j, (Map.LAYER)z + 1);
 
-                    Color newColor = Color.FromArgb(A, R, G, B);
+                                // Blend the pixels from the top and bottom images into a new composite pixel.
+                                for (int x = 0; x < bottomImage.Width; x++)
+                                {
+                                    for (int y = 0; y < bottomImage.Height; y++)
+                                    {
+                                        Color bottomColor = bottomImage.GetPixel(x, y);
+                                        Color topColor = topImage.GetPixel(x, y);
 
-                    newBitmap.SetPixel(i, j, newColor);
+                                        // Blend the pixel colors, taking the alpha channel into account. This is supposedly a popular equation to do so.
+                                        A = (byte)(topColor.A + (bottomColor.A * (255 - topColor.A) / 255));
+                                        R = (byte)((topColor.R * topColor.A / 255) + (bottomColor.R * bottomColor.A * (255 - topColor.A) / (255 * 255)));
+                                        G = (byte)((topColor.G * topColor.A / 255) + (bottomColor.G * bottomColor.A * (255 - topColor.A) / (255 * 255)));
+                                        B = (byte)((topColor.B * topColor.A / 255) + (bottomColor.B * bottomColor.A * (255 - topColor.A) / (255 * 255)));
+
+                                        // Create a new color object to store the composite pixel values
+                                        Color newColor = Color.FromArgb(A, R, G, B);
+
+                                        /* Replace the pixel on the bottom image with the new value. This is so we set up a "new" bottom image 
+                                         for the next layer to blend with. */
+                                        bottomImage.SetPixel(x, y, newColor);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    // Set the pixel values on the composite image based on the new blended pixel values.
+                    for (int a = 0; a < bottomImage.Width; a++)
+                        for (int b = 0; b < bottomImage.Height; b++ )
+                            newBitmap.SetPixel((i * ImagePalette.IMAGE_SIZE) + a, (j * ImagePalette.IMAGE_SIZE) + b, bottomImage.GetPixel(a,b));
                 }
             }
 
             newBitmap.Save(fileName, ImageFormat.Png);
+
+            MessageBox.Show("Map Exported.");
         }
 
         /********************************INPUT*/
