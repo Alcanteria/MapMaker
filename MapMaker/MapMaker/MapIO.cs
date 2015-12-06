@@ -115,7 +115,9 @@ namespace MapMaker
         public static void ExportMap(Map map, String fileName)
         {
             // Create an emtpy bitmap based on the dimentions of the supplied map.
-            Bitmap newBitmap = new Bitmap(map.GetColumns() * ImagePalette.IMAGE_SIZE, map.GetRows() * ImagePalette.IMAGE_SIZE, PixelFormat.Format32bppPArgb);
+            Bitmap newBitmap = new Bitmap(map.GetColumns() * ImagePalette.IMAGE_SIZE, 
+                                            map.GetRows() * ImagePalette.IMAGE_SIZE, 
+                                            PixelFormat.Format32bppPArgb);
             
             // Bytes to store the color value for each pixel's ARGB value.
             byte A;
@@ -137,7 +139,7 @@ namespace MapMaker
                 for (int j = 0; j < map.GetRows(); j++)
                 {
                     // Get the image for the floor layer
-                    bottomImage = map.GetTileImage(i, j, Map.LAYER.FLOOR);
+                    bottomImage = (Bitmap)map.GetTileImage(i, j, Map.LAYER.FLOOR).Clone();
 
                     // Loop through image layers **********************************
                     for (int z = 0; z < Map.NUMBER_OF_LAYERS; z++)
@@ -148,7 +150,7 @@ namespace MapMaker
                             // Check if the next layer up has an image and assign it to the top image if there is.
                             if (!map.GetTiles()[i, j].IsTileLayerEmpty((Map.LAYER)z + 1))
                             {
-                                topImage = map.GetTileImage(i, j, (Map.LAYER)z + 1);
+                                topImage = (Bitmap)map.GetTileImage(i, j, (Map.LAYER)z + 1).Clone();
 
                                 // Blend the pixels from the top and bottom images into a new composite pixel.
                                 for (int x = 0; x < bottomImage.Width; x++)
