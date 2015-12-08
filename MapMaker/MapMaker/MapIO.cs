@@ -150,6 +150,7 @@ namespace MapMaker
                             // Check if the next layer up has an image and assign it to the top image if there is.
                             if (!map.GetTiles()[i, j].IsTileLayerEmpty((Map.LAYER)z + 1))
                             {
+                                // Make sure this creates a clone (copy) of the image. Not doing this created a bug previously.
                                 topImage = (Bitmap)map.GetTileImage(i, j, (Map.LAYER)z + 1).Clone();
 
                                 // Blend the pixels from the top and bottom images into a new composite pixel.

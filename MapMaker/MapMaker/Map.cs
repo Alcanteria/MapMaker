@@ -58,8 +58,8 @@ namespace MapMaker
             // The number of layers in the map.
             public static int NUMBER_OF_LAYERS;
 
-            // Current layer the tiles are being placed on.
-            private LAYER currentLayer;
+            // Current layer the tiles are being placed on. Default is the floor layer
+            private LAYER currentLayer = Map.LAYER.FLOOR;
 
         /**************************************CONSTRUCTOR*/
 

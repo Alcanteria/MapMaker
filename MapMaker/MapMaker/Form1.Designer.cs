@@ -39,14 +39,20 @@
             this.openMenuBar = new System.Windows.Forms.ToolStripMenuItem();
             this.saveMenuBar = new System.Windows.Forms.ToolStripMenuItem();
             this.saveAsMenuBar = new System.Windows.Forms.ToolStripMenuItem();
+            this.exportMenuBar = new System.Windows.Forms.ToolStripMenuItem();
             this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.testButtonMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gridMenuBar = new System.Windows.Forms.ToolStripMenuItem();
             this.wallButton = new System.Windows.Forms.Button();
-            this.exportMenuBar = new System.Windows.Forms.ToolStripMenuItem();
+            this.floorRadioButton = new System.Windows.Forms.RadioButton();
+            this.wallRadioButton = new System.Windows.Forms.RadioButton();
+            this.decorRadioButton = new System.Windows.Forms.RadioButton();
+            this.layerGroupBox = new System.Windows.Forms.GroupBox();
+            this.eraseButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
             this.menuStrip1.SuspendLayout();
+            this.layerGroupBox.SuspendLayout();
             this.SuspendLayout();
             // 
             // pictureBox
@@ -62,7 +68,7 @@
             // floorButton
             // 
             this.floorButton.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.floorButton.Location = new System.Drawing.Point(13, 35);
+            this.floorButton.Location = new System.Drawing.Point(12, 174);
             this.floorButton.Name = "floorButton";
             this.floorButton.Size = new System.Drawing.Size(111, 24);
             this.floorButton.TabIndex = 0;
@@ -75,7 +81,7 @@
             // decorButton
             // 
             this.decorButton.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.decorButton.Location = new System.Drawing.Point(13, 119);
+            this.decorButton.Location = new System.Drawing.Point(12, 233);
             this.decorButton.Name = "decorButton";
             this.decorButton.Size = new System.Drawing.Size(111, 25);
             this.decorButton.TabIndex = 0;
@@ -141,6 +147,14 @@
             this.saveAsMenuBar.Size = new System.Drawing.Size(195, 22);
             this.saveAsMenuBar.Text = "Save As...";
             // 
+            // exportMenuBar
+            // 
+            this.exportMenuBar.Name = "exportMenuBar";
+            this.exportMenuBar.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.E)));
+            this.exportMenuBar.Size = new System.Drawing.Size(195, 22);
+            this.exportMenuBar.Text = "Export...";
+            this.exportMenuBar.Click += new System.EventHandler(this.exportMenuBar_Click);
+            // 
             // editToolStripMenuItem
             // 
             this.editToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -175,7 +189,7 @@
             // wallButton
             // 
             this.wallButton.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.wallButton.Location = new System.Drawing.Point(13, 77);
+            this.wallButton.Location = new System.Drawing.Point(12, 204);
             this.wallButton.Name = "wallButton";
             this.wallButton.Size = new System.Drawing.Size(111, 23);
             this.wallButton.TabIndex = 2;
@@ -183,13 +197,66 @@
             this.wallButton.UseVisualStyleBackColor = true;
             this.wallButton.Click += new System.EventHandler(this.wallButton_Click);
             // 
-            // exportMenuBar
+            // floorRadioButton
             // 
-            this.exportMenuBar.Name = "exportMenuBar";
-            this.exportMenuBar.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.E)));
-            this.exportMenuBar.Size = new System.Drawing.Size(195, 22);
-            this.exportMenuBar.Text = "Export...";
-            this.exportMenuBar.Click += new System.EventHandler(this.exportMenuBar_Click);
+            this.floorRadioButton.AutoSize = true;
+            this.floorRadioButton.Checked = true;
+            this.floorRadioButton.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.floorRadioButton.Location = new System.Drawing.Point(6, 79);
+            this.floorRadioButton.Name = "floorRadioButton";
+            this.floorRadioButton.Size = new System.Drawing.Size(53, 19);
+            this.floorRadioButton.TabIndex = 4;
+            this.floorRadioButton.TabStop = true;
+            this.floorRadioButton.Text = "Floor";
+            this.floorRadioButton.UseVisualStyleBackColor = true;
+            // 
+            // wallRadioButton
+            // 
+            this.wallRadioButton.AutoSize = true;
+            this.wallRadioButton.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.wallRadioButton.Location = new System.Drawing.Point(6, 54);
+            this.wallRadioButton.Name = "wallRadioButton";
+            this.wallRadioButton.Size = new System.Drawing.Size(50, 19);
+            this.wallRadioButton.TabIndex = 5;
+            this.wallRadioButton.Text = "Wall";
+            this.wallRadioButton.UseVisualStyleBackColor = true;
+            // 
+            // decorRadioButton
+            // 
+            this.decorRadioButton.AutoSize = true;
+            this.decorRadioButton.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.decorRadioButton.Location = new System.Drawing.Point(6, 29);
+            this.decorRadioButton.Name = "decorRadioButton";
+            this.decorRadioButton.Size = new System.Drawing.Size(59, 19);
+            this.decorRadioButton.TabIndex = 6;
+            this.decorRadioButton.Text = "Decor";
+            this.decorRadioButton.UseVisualStyleBackColor = true;
+            // 
+            // layerGroupBox
+            // 
+            this.layerGroupBox.Controls.Add(this.floorRadioButton);
+            this.layerGroupBox.Controls.Add(this.decorRadioButton);
+            this.layerGroupBox.Controls.Add(this.wallRadioButton);
+            this.layerGroupBox.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.layerGroupBox.Location = new System.Drawing.Point(12, 35);
+            this.layerGroupBox.Name = "layerGroupBox";
+            this.layerGroupBox.Size = new System.Drawing.Size(111, 112);
+            this.layerGroupBox.TabIndex = 7;
+            this.layerGroupBox.TabStop = false;
+            this.layerGroupBox.Text = "Layer";
+            // 
+            // eraseButton
+            // 
+            this.eraseButton.BackColor = System.Drawing.SystemColors.WindowText;
+            this.eraseButton.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.eraseButton.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.eraseButton.Location = new System.Drawing.Point(12, 265);
+            this.eraseButton.Name = "eraseButton";
+            this.eraseButton.Size = new System.Drawing.Size(111, 23);
+            this.eraseButton.TabIndex = 8;
+            this.eraseButton.Text = "Erase";
+            this.eraseButton.UseVisualStyleBackColor = false;
+            this.eraseButton.Click += new System.EventHandler(this.eraseButton_Click);
             // 
             // mainForm
             // 
@@ -197,6 +264,8 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.WindowFrame;
             this.ClientSize = new System.Drawing.Size(848, 522);
+            this.Controls.Add(this.eraseButton);
+            this.Controls.Add(this.layerGroupBox);
             this.Controls.Add(this.wallButton);
             this.Controls.Add(this.decorButton);
             this.Controls.Add(this.floorButton);
@@ -210,6 +279,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).EndInit();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            this.layerGroupBox.ResumeLayout(false);
+            this.layerGroupBox.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -233,6 +304,11 @@
         private System.Windows.Forms.Button wallButton;
         private System.Windows.Forms.ToolStripMenuItem testButtonMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exportMenuBar;
+        private System.Windows.Forms.RadioButton floorRadioButton;
+        private System.Windows.Forms.RadioButton wallRadioButton;
+        private System.Windows.Forms.RadioButton decorRadioButton;
+        private System.Windows.Forms.GroupBox layerGroupBox;
+        private System.Windows.Forms.Button eraseButton;
 
     }
 }

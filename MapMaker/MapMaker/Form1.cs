@@ -33,12 +33,13 @@ namespace MapMaker
         /********************************************WINDOWS FORM PARTS*/
 
             // Declare a version of the picture box to use to draw on to.
-            private PictureBox drawSurface;
+            private PictureBox DRAW_SURFACE;
 
             // Declare versions of buttons to interact with.
             private Button FLOOR_BUTTON;
             private Button WALL_BUTTON;
             private Button DECOR_BUTTON;
+            private Button ERASE_BUTTON;
 
             // Dialog box for selecting image files.
             OpenFileDialog selectImageDialog = new OpenFileDialog();
@@ -58,6 +59,18 @@ namespace MapMaker
             // Pen for drawing the grid.
             Pen rectPen = new Pen(Color.Black);
 
+            // Group box for containing the layer radio buttons.
+            GroupBox LAYER_GROUP_BOX;
+
+            // Radio button for floor layer select.
+            RadioButton FLOOR_LAYER_RADIO;
+
+            // Radio button for wall layer.
+            RadioButton WALL_LAYER_RADIO;
+
+            // Radio button for decor layer.
+            RadioButton DECOR_LAYER_RADIO;
+
         /*********************************************MOUSE CLICKS*/
 
             // This is an offest that compensates for a slight variance in click position.
@@ -67,6 +80,11 @@ namespace MapMaker
             // Location of the current mouse click on the map, filtered through any necessary offsets.
             private Point mouseLocation = new Point();
 
+        /****************************************************MISC*/
+
+            // Boolean to check the current state of erasing.
+            private bool isErasing;
+
         public mainForm()
         {
             InitializeComponent();
@@ -75,24 +93,39 @@ namespace MapMaker
             this.KeyPress += new KeyPressEventHandler(Form1_KeyPress);
 
             // Link our draw surface to the picture box on the windows form.
-            drawSurface = pictureBox;
+            DRAW_SURFACE = pictureBox;
 
             // Add the key listeners to the buttons on the form. This is to filter out arrow key presses when a button is selected.
             floorButton.PreviewKeyDown += new PreviewKeyDownEventHandler(floorButton_PreviewKeyDown);
             wallButton.PreviewKeyDown += new PreviewKeyDownEventHandler(wallButton_PreviewKeyDown);
             decorButton.PreviewKeyDown += new PreviewKeyDownEventHandler(decorButton_PreviewKeyDown);
+            eraseButton.PreviewKeyDown += new PreviewKeyDownEventHandler(eraseButton_PreviewKeyDown);
 
             // Link our buttons to the form buttons
             FLOOR_BUTTON = floorButton;
             WALL_BUTTON = wallButton;
             DECOR_BUTTON = decorButton;
+            ERASE_BUTTON = eraseButton;
+
+            // Link the group box to a local copy.
+            LAYER_GROUP_BOX = layerGroupBox;
+
+            // Link radio buttons to local copies.
+            FLOOR_LAYER_RADIO = floorRadioButton;
+            WALL_LAYER_RADIO = wallRadioButton;
+            DECOR_LAYER_RADIO = decorRadioButton;
+
+            // Attached the event listeners for the radio buttons.
+            FLOOR_LAYER_RADIO.CheckedChanged += new EventHandler(radioButtons_CheckedChanged);
+            WALL_LAYER_RADIO.CheckedChanged += new EventHandler(radioButtons_CheckedChanged);
+            DECOR_LAYER_RADIO.CheckedChanged += new EventHandler(radioButtons_CheckedChanged);
 
             // Adjust the size of the main window based on the scale we've set above.
             this.Width  = (int)(screenWidth * SCREEN_SCALE);
             this.Height = (int)(screenHeight * SCREEN_SCALE);
 
             // Set the size of the drawing surface based on the main window's properties.
-            drawSurface.Size = new Size((int)(Width * DRAWING_SURFACE_SCALE), (int)(Height * DRAWING_SURFACE_SCALE));
+            DRAW_SURFACE.Size = new Size((int)(Width * DRAWING_SURFACE_SCALE), (int)(Height * DRAWING_SURFACE_SCALE));
           
             // Open image dialog box properties
             selectImageDialog.Filter = "Image Files (*.bmp, *.gif, *.jpg, *.png)|*.bmp; *.gif; *.jpg; *.png";
@@ -120,15 +153,15 @@ namespace MapMaker
             this.Location = new Point((int)(screenWidth * .05f), (int)(screenHeight * .05f));
 
             // Set the location of the buttons.
-            FLOOR_BUTTON.Location = new Point(20, 50);
-            WALL_BUTTON.Location = new Point(FLOOR_BUTTON.Location.X, FLOOR_BUTTON.Location.Y + (FLOOR_BUTTON.Height + 5));
-            DECOR_BUTTON.Location = new Point(FLOOR_BUTTON.Location.X, WALL_BUTTON.Location.Y + (WALL_BUTTON.Height + 5));
+            //FLOOR_BUTTON.Location = new Point(20, 50);
+            //WALL_BUTTON.Location = new Point(FLOOR_BUTTON.Location.X, FLOOR_BUTTON.Location.Y + (FLOOR_BUTTON.Height + 5));
+            //DECOR_BUTTON.Location = new Point(FLOOR_BUTTON.Location.X, WALL_BUTTON.Location.Y + (WALL_BUTTON.Height + 5));
 
             // Set the starting location of the drawing space. This is based off of the location of the buttons.
-            drawSurface.Location = new Point(FLOOR_BUTTON.Location.X + (FLOOR_BUTTON.Width + 5), FLOOR_BUTTON.Location.Y);            
+            DRAW_SURFACE.Location = new Point(FLOOR_BUTTON.Location.X + (FLOOR_BUTTON.Width + 5), LAYER_GROUP_BOX.Location.Y);            
 
             // Link the paint event of our draw surface to the windows event cycle
-            drawSurface.Paint += new System.Windows.Forms.PaintEventHandler(this.drawSurface_Paint);
+            DRAW_SURFACE.Paint += new System.Windows.Forms.PaintEventHandler(this.drawSurface_Paint);
 
 
         }
@@ -202,9 +235,10 @@ namespace MapMaker
         void Form1_KeyPress(object sender, KeyPressEventArgs e) {}
 
         // This filters out arrow key presses when this button is selected on the windows form.
-        private void floorButton_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e) { CheckForArrowKeys(e); }
-        private void wallButton_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e) { CheckForArrowKeys(e); }
-        private void decorButton_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e) { CheckForArrowKeys(e); }
+        private void floorButton_PreviewKeyDown (object sender, PreviewKeyDownEventArgs e) { CheckForArrowKeys(e); }
+        private void wallButton_PreviewKeyDown  (object sender, PreviewKeyDownEventArgs e) { CheckForArrowKeys(e); }
+        private void decorButton_PreviewKeyDown (object sender, PreviewKeyDownEventArgs e) { CheckForArrowKeys(e); }
+        private void eraseButton_PreviewKeyDown (object sender, PreviewKeyDownEventArgs e) { CheckForArrowKeys(e); }
 
         /* If a non Alpha-Numeric key press is detected in IsInputKey() above, this is where
          you filter out the actual key pressed and handle it appropriately. */
@@ -277,6 +311,9 @@ namespace MapMaker
         // Click event for the FLOOR select button.
         private void floorButton_Click(object sender, EventArgs e)
         {
+            // Set erasing to off.
+            isErasing = false;
+
             // Open the image select diaglog box and check if the user selected "OK"
             if (selectImageDialog.ShowDialog() == DialogResult.OK)
             {
@@ -305,8 +342,12 @@ namespace MapMaker
 
         }
 
+        // Click event for the WALL select button.
         private void wallButton_Click(object sender, EventArgs e)
         {
+            // Set erasing to off.
+            isErasing = false;
+
             // Open the image select diaglog box and check if the user selected "OK"
             if (selectImageDialog.ShowDialog() == DialogResult.OK)
             {
@@ -337,6 +378,9 @@ namespace MapMaker
         // Click event for the DECOR select button.
         private void decorButton_Click(object sender, EventArgs e)
         {
+            // Set erasing to off.
+            isErasing = false;
+
             // Open the image select diaglog box and check if the user selected "OK"
             if (selectImageDialog.ShowDialog() == DialogResult.OK)
             {
@@ -364,14 +408,27 @@ namespace MapMaker
             }
         }
 
+        // Click event for the ERASE button.
+        private void eraseButton_Click(object sender, EventArgs e)
+        {
+            // Set erasing to on.
+            isErasing = true;
+        }
+
         // Called when the map is clicked.
         private void pictureBox_Click(object sender, EventArgs e)
         {
             // Figure out the location of the click.
             SetMouseLocation(MousePosition.X, MousePosition.Y);
 
+            // Check if erasing is turned on.
+            if (isErasing)
+            {
+                map.GetClickedTile(mouseLocation).SetTileImage(map.GetCurrentLayer(), Tile.NO_IMAGE);
+                Refresh();
+            }
             // Check if there is a current image selected. If there is, set the tile to it.
-            if (map.GetImagePalette().GetCurrentImage() != null)
+            else if (map.GetImagePalette().GetCurrentImage() != null)
             {
                 map.GetClickedTile(mouseLocation).SetTileImage(map.GetCurrentLayer(), map.GetImagePalette().GetCurrentImage());
                 Refresh();
@@ -382,8 +439,8 @@ namespace MapMaker
             necessary offsets. */
         public void SetMouseLocation(int x, int y)
         {
-            mouseLocation.X = x - map.GetMapRootX() - Location.X - drawSurface.Location.X - X_OFFSET;
-            mouseLocation.Y = y - map.GetMapRootY() - Location.Y - drawSurface.Location.Y - Y_OFFSET;
+            mouseLocation.X = x - map.GetMapRootX() - Location.X - DRAW_SURFACE.Location.X - X_OFFSET;
+            mouseLocation.Y = y - map.GetMapRootY() - Location.Y - DRAW_SURFACE.Location.Y - Y_OFFSET;
         }
 
         // Sets the grid visibility to the opposite state of what it currently is.
@@ -466,10 +523,18 @@ namespace MapMaker
 
         /***********************************TEST BUTTON*/
         private void testButtonMenuItem_Click(object sender, EventArgs e){ }
-            
 
-        
-        
+        /*********************************************************RADIO BUTTONS*/
 
+        private void radioButtons_CheckedChanged(Object sender, EventArgs e)
+        {
+            // Check which radio button was selected and change the current layer accordingly.
+            if (FLOOR_LAYER_RADIO.Checked)
+                map.SetCurrentLayer(Map.LAYER.FLOOR);
+            else if (WALL_LAYER_RADIO.Checked)
+                map.SetCurrentLayer(Map.LAYER.WALL);
+            else if (DECOR_LAYER_RADIO.Checked)
+                map.SetCurrentLayer(Map.LAYER.DECOR);
+        }
     }
 }
