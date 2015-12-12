@@ -150,5 +150,15 @@ namespace MapMaker
                 for (int j = 0; j < rows; j++)
                     TILES[i, j] = new Tile();
         }
+
+        // Sets every floor tile to the passed image.
+        public void FillFloor(String image)
+        {
+            // Loop through every tile and change the image to the passed image argument.
+            for(int i = 0; i < GetColumns(); i++)
+                for(int j = 0; j < GetRows(); j++)
+                    GetTiles()[i,j].SetTileImage(Map.LAYER.FLOOR, image);
+        }
+
     }
 }

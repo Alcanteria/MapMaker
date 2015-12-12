@@ -15,75 +15,79 @@ namespace MapMaker
     {
         /********************************************SCREEN DIMENSIONS*/
 
-            // Get the dimensions of the primary monitor.
-            int screenWidth = Screen.PrimaryScreen.Bounds.Width;
-            int screenHeight = Screen.PrimaryScreen.Bounds.Height;
+        // Get the dimensions of the primary monitor.
+        int screenWidth = Screen.PrimaryScreen.Bounds.Width;
+        int screenHeight = Screen.PrimaryScreen.Bounds.Height;
 
-            // The scale you want to draw the main window size to.
-            private const float SCREEN_SCALE = .90f;
+        // The scale you want to draw the main window size to.
+        private const float SCREEN_SCALE = .90f;
 
-            // The size of the drawing surface as a percentage of the main window's size.
-            private const float DRAWING_SURFACE_SCALE = .85f;
+        // The size of the drawing surface as a percentage of the main window's size.
+        private const float DRAWING_SURFACE_SCALE = .85f;
 
         /***********************************************MAP PARTS*/
 
-            // Map object.
-            private Map map = new Map(10, 10);
+        // Map object.
+        private Map map = new Map(10, 10);
 
         /********************************************WINDOWS FORM PARTS*/
 
-            // Declare a version of the picture box to use to draw on to.
-            private PictureBox DRAW_SURFACE;
+        // Declare a version of the picture box to use to draw on to.
+        private PictureBox DRAW_SURFACE;
 
-            // Declare versions of buttons to interact with.
-            private Button FLOOR_BUTTON;
-            private Button WALL_BUTTON;
-            private Button DECOR_BUTTON;
-            private Button ERASE_BUTTON;
+        // Declare a local version of the picture box to draw the image preivew on.
+        private PictureBox PREIVEW_BOX;
 
-            // Dialog box for selecting image files.
-            OpenFileDialog selectImageDialog = new OpenFileDialog();
+        // Declare versions of buttons to interact with.
+        private Button LOAD_IMAGE_BUTTON;
+        private Button ERASE_BUTTON;
 
-            // Dialog box for selecting maps to open.
-            OpenFileDialog selectMapDialog = new OpenFileDialog();
+        // Dialog box for selecting image files.
+        OpenFileDialog selectImageDialog = new OpenFileDialog();
 
-            // Dialog box for saving files.
-            SaveFileDialog saveFileDialog = new SaveFileDialog();
+        // Dialog box for selecting maps to open.
+        OpenFileDialog selectMapDialog = new OpenFileDialog();
 
-            // Dialog box for exporting image files.
-            SaveFileDialog exportFileDialog = new SaveFileDialog();
+        // Dialog box for saving files.
+        SaveFileDialog saveFileDialog = new SaveFileDialog();
 
-            // Dialog for creating a new map.
-            private newMapDialog createMapDialog;
+        // Dialog box for exporting image files.
+        SaveFileDialog exportFileDialog = new SaveFileDialog();
 
-            // Pen for drawing the grid.
-            Pen rectPen = new Pen(Color.Black);
+        // Dialog for creating a new map.
+        private newMapDialog createMapDialog;
 
-            // Group box for containing the layer radio buttons.
-            GroupBox LAYER_GROUP_BOX;
+        // Pen for drawing the grid.
+        Pen rectPen = new Pen(Color.Black);
 
-            // Radio button for floor layer select.
-            RadioButton FLOOR_LAYER_RADIO;
+        // Group box for containing the layer radio buttons.
+        GroupBox LAYER_GROUP_BOX;
 
-            // Radio button for wall layer.
-            RadioButton WALL_LAYER_RADIO;
+        // Radio button for floor layer select.
+        RadioButton FLOOR_LAYER_RADIO;
 
-            // Radio button for decor layer.
-            RadioButton DECOR_LAYER_RADIO;
+        // Radio button for wall layer.
+        RadioButton WALL_LAYER_RADIO;
+
+        // Radio button for decor layer.
+        RadioButton DECOR_LAYER_RADIO;
+
+        // The size of the current image preview box.
+        int PREVIEW_SIZE = 50;
 
         /*********************************************MOUSE CLICKS*/
 
-            // This is an offest that compensates for a slight variance in click position.
-            private const int X_OFFSET = 10;
-            private const int Y_OFFSET = 33;
+        // This is an offest that compensates for a slight variance in click position.
+        private const int X_OFFSET = 10;
+        private const int Y_OFFSET = 33;
 
-            // Location of the current mouse click on the map, filtered through any necessary offsets.
-            private Point mouseLocation = new Point();
+        // Location of the current mouse click on the map, filtered through any necessary offsets.
+        private Point mouseLocation = new Point();
 
         /****************************************************MISC*/
 
-            // Boolean to check the current state of erasing.
-            private bool isErasing;
+        // Boolean to check the current state of erasing.
+        private bool isErasing;
 
         public mainForm()
         {
@@ -95,16 +99,15 @@ namespace MapMaker
             // Link our draw surface to the picture box on the windows form.
             DRAW_SURFACE = pictureBox;
 
+            // Link our preview box to the local version.
+            PREIVEW_BOX = currentImageDisplay;
+
             // Add the key listeners to the buttons on the form. This is to filter out arrow key presses when a button is selected.
-            floorButton.PreviewKeyDown += new PreviewKeyDownEventHandler(floorButton_PreviewKeyDown);
-            wallButton.PreviewKeyDown += new PreviewKeyDownEventHandler(wallButton_PreviewKeyDown);
-            decorButton.PreviewKeyDown += new PreviewKeyDownEventHandler(decorButton_PreviewKeyDown);
+            loadImageButton.PreviewKeyDown += new PreviewKeyDownEventHandler(loadImageButton_PreviewKeyDown);
             eraseButton.PreviewKeyDown += new PreviewKeyDownEventHandler(eraseButton_PreviewKeyDown);
 
             // Link our buttons to the form buttons
-            FLOOR_BUTTON = floorButton;
-            WALL_BUTTON = wallButton;
-            DECOR_BUTTON = decorButton;
+            LOAD_IMAGE_BUTTON = loadImageButton;
             ERASE_BUTTON = eraseButton;
 
             // Link the group box to a local copy.
@@ -121,12 +124,15 @@ namespace MapMaker
             DECOR_LAYER_RADIO.CheckedChanged += new EventHandler(radioButtons_CheckedChanged);
 
             // Adjust the size of the main window based on the scale we've set above.
-            this.Width  = (int)(screenWidth * SCREEN_SCALE);
+            this.Width = (int)(screenWidth * SCREEN_SCALE);
             this.Height = (int)(screenHeight * SCREEN_SCALE);
 
             // Set the size of the drawing surface based on the main window's properties.
             DRAW_SURFACE.Size = new Size((int)(Width * DRAWING_SURFACE_SCALE), (int)(Height * DRAWING_SURFACE_SCALE));
-          
+
+            // Set the size of the preview box.
+            PREIVEW_BOX.Size = new Size(PREVIEW_SIZE, PREVIEW_SIZE);
+
             // Open image dialog box properties
             selectImageDialog.Filter = "Image Files (*.bmp, *.gif, *.jpg, *.png)|*.bmp; *.gif; *.jpg; *.png";
             selectImageDialog.Multiselect = false;
@@ -158,7 +164,7 @@ namespace MapMaker
             //DECOR_BUTTON.Location = new Point(FLOOR_BUTTON.Location.X, WALL_BUTTON.Location.Y + (WALL_BUTTON.Height + 5));
 
             // Set the starting location of the drawing space. This is based off of the location of the buttons.
-            DRAW_SURFACE.Location = new Point(FLOOR_BUTTON.Location.X + (FLOOR_BUTTON.Width + 5), LAYER_GROUP_BOX.Location.Y);            
+            DRAW_SURFACE.Location = new Point(LOAD_IMAGE_BUTTON.Location.X + (LOAD_IMAGE_BUTTON.Width + 5), LAYER_GROUP_BOX.Location.Y);
 
             // Link the paint event of our draw surface to the windows event cycle
             DRAW_SURFACE.Paint += new System.Windows.Forms.PaintEventHandler(this.drawSurface_Paint);
@@ -232,13 +238,11 @@ namespace MapMaker
         /***************************************************************KEYBOARD EVENTS*/
 
         // Handles Alpha-Numeric key presses.
-        void Form1_KeyPress(object sender, KeyPressEventArgs e) {}
+        void Form1_KeyPress(object sender, KeyPressEventArgs e) { }
 
         // This filters out arrow key presses when this button is selected on the windows form.
-        private void floorButton_PreviewKeyDown (object sender, PreviewKeyDownEventArgs e) { CheckForArrowKeys(e); }
-        private void wallButton_PreviewKeyDown  (object sender, PreviewKeyDownEventArgs e) { CheckForArrowKeys(e); }
-        private void decorButton_PreviewKeyDown (object sender, PreviewKeyDownEventArgs e) { CheckForArrowKeys(e); }
-        private void eraseButton_PreviewKeyDown (object sender, PreviewKeyDownEventArgs e) { CheckForArrowKeys(e); }
+        private void loadImageButton_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e) { CheckForArrowKeys(e); }
+        private void eraseButton_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e) { CheckForArrowKeys(e); }
 
         /* If a non Alpha-Numeric key press is detected in IsInputKey() above, this is where
          you filter out the actual key pressed and handle it appropriately. */
@@ -309,41 +313,7 @@ namespace MapMaker
         /*************************************************************MOUSE CLICKS*/
 
         // Click event for the FLOOR select button.
-        private void floorButton_Click(object sender, EventArgs e)
-        {
-            // Set erasing to off.
-            isErasing = false;
-
-            // Open the image select diaglog box and check if the user selected "OK"
-            if (selectImageDialog.ShowDialog() == DialogResult.OK)
-            {
-                try
-                {
-                    // Load the image
-                    Bitmap newImage = new Bitmap(Image.FromFile(selectImageDialog.FileName), ImagePalette.IMAGE_SIZE, ImagePalette.IMAGE_SIZE);
-
-                     // Add it to the image palette
-                    map.GetImagePalette().AddNewImage(selectImageDialog.FileName, newImage);
-
-                    // Set the current paint layer.
-                    map.SetCurrentLayer(Map.LAYER.FLOOR);
-
-                    // Set the current image to paint.
-                    map.GetImagePalette().SetCurrentImage(selectImageDialog.FileName);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Could not load image: " + selectImageDialog.FileName);
-                    Console.WriteLine("Could not load image: " + selectImageDialog.FileName);
-                    Console.WriteLine(ex.ToString());
-                }
-
-            }
-
-        }
-
-        // Click event for the WALL select button.
-        private void wallButton_Click(object sender, EventArgs e)
+        private void loadImageButton_Click(object sender, EventArgs e)
         {
             // Set erasing to off.
             isErasing = false;
@@ -359,9 +329,6 @@ namespace MapMaker
                     // Add it to the image palette
                     map.GetImagePalette().AddNewImage(selectImageDialog.FileName, newImage);
 
-                    // Set the current paint layer.
-                    map.SetCurrentLayer(Map.LAYER.WALL);
-
                     // Set the current image to paint.
                     map.GetImagePalette().SetCurrentImage(selectImageDialog.FileName);
                 }
@@ -373,39 +340,9 @@ namespace MapMaker
                 }
 
             }
-        }
 
-        // Click event for the DECOR select button.
-        private void decorButton_Click(object sender, EventArgs e)
-        {
-            // Set erasing to off.
-            isErasing = false;
+            UpdateCurrentImagePreview();
 
-            // Open the image select diaglog box and check if the user selected "OK"
-            if (selectImageDialog.ShowDialog() == DialogResult.OK)
-            {
-                try
-                {
-                    // Load the image
-                    Bitmap newImage = new Bitmap(Image.FromFile(selectImageDialog.FileName), ImagePalette.IMAGE_SIZE, ImagePalette.IMAGE_SIZE);
-
-                    // Add it to the image palette
-                    map.GetImagePalette().AddNewImage(selectImageDialog.FileName, newImage);
-
-                    // Set the current paint layer.
-                    map.SetCurrentLayer(Map.LAYER.DECOR);
-
-                    // Set the current image to paint.
-                    map.GetImagePalette().SetCurrentImage(selectImageDialog.FileName);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Could not load image: " + selectImageDialog.FileName);
-                    Console.WriteLine("Could not load image: " + selectImageDialog.FileName);
-                    Console.WriteLine(ex.ToString());
-                }
-
-            }
         }
 
         // Click event for the ERASE button.
@@ -432,7 +369,7 @@ namespace MapMaker
             {
                 map.GetClickedTile(mouseLocation).SetTileImage(map.GetCurrentLayer(), map.GetImagePalette().GetCurrentImage());
                 Refresh();
-            }            
+            }
         }
 
         /* Sets the location of the mouse cursor on the map. Filters the location through any
@@ -456,6 +393,35 @@ namespace MapMaker
             SaveMap();
         }
 
+        // Method for the "Fill Floor" button on the menu bar.
+        private void fillFloorToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // Open the image select diaglog box and check if the user selected "OK"
+            if (selectImageDialog.ShowDialog() == DialogResult.OK)
+            {
+                try
+                {
+                    // Load the image
+                    Bitmap newImage = new Bitmap(Image.FromFile(selectImageDialog.FileName), ImagePalette.IMAGE_SIZE, ImagePalette.IMAGE_SIZE);
+
+                    // Add it to the image palette
+                    map.GetImagePalette().AddNewImage(selectImageDialog.FileName, newImage);
+
+                    // Call the FillFloor() method, passing the loaded image to it.
+                    map.FillFloor(selectImageDialog.FileName);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Could not load image: " + selectImageDialog.FileName);
+                    Console.WriteLine("Could not load image: " + selectImageDialog.FileName);
+                    Console.WriteLine(ex.ToString());
+                }
+
+            }
+
+            Refresh();
+        }
+
         /*************************************************************FILE HANDLING*/
 
         // Regular "Save" method.
@@ -473,7 +439,7 @@ namespace MapMaker
         {
             // Prompt the user with a save file dialog box to get the path and file name for the map.
             if (saveFileDialog.ShowDialog() == DialogResult.OK)
-            { 
+            {
                 map.SetMapName(saveFileDialog.FileName);
                 MapIO.SaveMap(map);
             }
@@ -522,7 +488,7 @@ namespace MapMaker
         }
 
         /***********************************TEST BUTTON*/
-        private void testButtonMenuItem_Click(object sender, EventArgs e){ }
+        private void testButtonMenuItem_Click(object sender, EventArgs e) { }
 
         /*********************************************************RADIO BUTTONS*/
 
@@ -536,5 +502,22 @@ namespace MapMaker
             else if (DECOR_LAYER_RADIO.Checked)
                 map.SetCurrentLayer(Map.LAYER.DECOR);
         }
+
+        /**************************************CURRENT IMAGE PREVIEW BOX*/
+
+        // Updates the image drawn in the current image preview box.
+        public void UpdateCurrentImagePreview()
+        {
+            // Make a copy of the current image.
+            Bitmap copy = new Bitmap((Image)map.GetImagePalette().GetImage(map.GetImagePalette().GetCurrentImage()).Clone());
+
+            // Scale it down to the size of the preview box.
+            Bitmap preview = new Bitmap(copy, PREVIEW_SIZE, PREVIEW_SIZE);
+
+            // Set the preview display to the new scaled image and refresh the screen.
+            currentImageDisplay.Image = preview;
+            Refresh();
+        }
+
     }
 }
