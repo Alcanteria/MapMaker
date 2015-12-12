@@ -13,81 +13,89 @@ namespace MapMaker
 {
     public partial class mainForm : Form
     {
-        /********************************************SCREEN DIMENSIONS*/
+        /*******************************SCREEN DIMENSIONS*/
 
-        // Get the dimensions of the primary monitor.
-        int screenWidth = Screen.PrimaryScreen.Bounds.Width;
-        int screenHeight = Screen.PrimaryScreen.Bounds.Height;
+            // Get the dimensions of the primary monitor.
+            int screenWidth = Screen.PrimaryScreen.Bounds.Width;
+            int screenHeight = Screen.PrimaryScreen.Bounds.Height;
 
-        // The scale you want to draw the main window size to.
-        private const float SCREEN_SCALE = .90f;
+            // The scale you want to draw the main window size to.
+            private const float SCREEN_SCALE = .90f;
 
-        // The size of the drawing surface as a percentage of the main window's size.
-        private const float DRAWING_SURFACE_SCALE = .85f;
+            // The size of the drawing surface as a percentage of the main window's size.
+            private const float DRAWING_SURFACE_SCALE = .85f;
 
-        /***********************************************MAP PARTS*/
+        /**********************************MAP PARTS*/
 
-        // Map object.
-        private Map map = new Map(10, 10);
+            // Map object.
+            private Map map = new Map(10, 10);
 
-        /********************************************WINDOWS FORM PARTS*/
+        /******************************WINDOWS FORM PARTS*/
 
-        // Declare a version of the picture box to use to draw on to.
-        private PictureBox DRAW_SURFACE;
+            // Declare a version of the picture box to use to draw on to.
+            private PictureBox DRAW_SURFACE;
 
-        // Declare a local version of the picture box to draw the image preivew on.
-        private PictureBox PREIVEW_BOX;
+            // Declare a local version of the picture box to draw the image preivew on.
+            private PictureBox PREIVEW_BOX;
 
-        // Declare versions of buttons to interact with.
-        private Button LOAD_IMAGE_BUTTON;
-        private Button ERASE_BUTTON;
+            // Declare versions of buttons to interact with.
+            private Button LOAD_IMAGE_BUTTON;
+            private Button ERASE_BUTTON;
 
-        // Dialog box for selecting image files.
-        OpenFileDialog selectImageDialog = new OpenFileDialog();
+            // Dialog box for selecting image files.
+            OpenFileDialog selectImageDialog = new OpenFileDialog();
 
-        // Dialog box for selecting maps to open.
-        OpenFileDialog selectMapDialog = new OpenFileDialog();
+            // Dialog box for selecting maps to open.
+            OpenFileDialog selectMapDialog = new OpenFileDialog();
 
-        // Dialog box for saving files.
-        SaveFileDialog saveFileDialog = new SaveFileDialog();
+            // Dialog box for saving files.
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
 
-        // Dialog box for exporting image files.
-        SaveFileDialog exportFileDialog = new SaveFileDialog();
+            // Dialog box for exporting image files.
+            SaveFileDialog exportFileDialog = new SaveFileDialog();
 
-        // Dialog for creating a new map.
-        private newMapDialog createMapDialog;
+            // Dialog for creating a new map.
+            private newMapDialog createMapDialog;
 
-        // Pen for drawing the grid.
-        Pen rectPen = new Pen(Color.Black);
+            // Pen for drawing the grid.
+            Pen rectPen = new Pen(Color.Black);
 
-        // Group box for containing the layer radio buttons.
-        GroupBox LAYER_GROUP_BOX;
+            // Group box for containing the layer radio buttons.
+            GroupBox LAYER_GROUP_BOX;
 
-        // Radio button for floor layer select.
-        RadioButton FLOOR_LAYER_RADIO;
+            // Radio button for floor layer select.
+            RadioButton FLOOR_LAYER_RADIO;
 
-        // Radio button for wall layer.
-        RadioButton WALL_LAYER_RADIO;
+            // Radio button for wall layer.
+            RadioButton WALL_LAYER_RADIO;
 
-        // Radio button for decor layer.
-        RadioButton DECOR_LAYER_RADIO;
+            // Radio button for decor layer.
+            RadioButton DECOR_LAYER_RADIO;
 
-        // The size of the current image preview box.
-        int PREVIEW_SIZE = 50;
+            // The size of the current image preview box.
+            int PREVIEW_SIZE = 50;
 
-        /*********************************************MOUSE CLICKS*/
+        /******************************RECENT PICTURES*/
 
-        // This is an offest that compensates for a slight variance in click position.
-        private const int X_OFFSET = 10;
-        private const int Y_OFFSET = 33;
+            // Array to store each preivew box
+            private PictureBox[] recentPictures = new PictureBox[10];
 
-        // Location of the current mouse click on the map, filtered through any necessary offsets.
-        private Point mouseLocation = new Point();
+            // Flag for an empty picture box.
+            public String NO_RECENT_IMAGE = "NO RECENT IMAGE";
+
+        /********************************MOUSE CLICKS*/
+
+            // This is an offest that compensates for a slight variance in click position.
+            private const int X_OFFSET = 10;
+            private const int Y_OFFSET = 33;
+
+            // Location of the current mouse click on the map, filtered through any necessary offsets.
+            private Point mouseLocation = new Point();
 
         /****************************************************MISC*/
 
-        // Boolean to check the current state of erasing.
-        private bool isErasing;
+            // Boolean to check the current state of erasing.
+            private bool isErasing;
 
         public mainForm()
         {
@@ -150,6 +158,22 @@ namespace MapMaker
 
             // Initiialize the new map dialog box.
             createMapDialog = new newMapDialog(this);
+
+            // Link all of the preview picture boxes to the elements in the picture box array.
+            recentPictures[0] = recent0;
+            recentPictures[1] = recent1;
+            recentPictures[2] = recent2;
+            recentPictures[3] = recent3;
+            recentPictures[4] = recent4;
+            recentPictures[5] = recent5;
+            recentPictures[6] = recent6;
+            recentPictures[7] = recent7;
+            recentPictures[8] = recent8;
+            recentPictures[9] = recent9;
+
+            // Set all of the image tags in the recent pictures array to emtpy.
+            for (int i = 0; i < recentPictures.Length; i++)
+                recentPictures[i].Tag = NO_RECENT_IMAGE;
 
         }
 
@@ -503,7 +527,7 @@ namespace MapMaker
                 map.SetCurrentLayer(Map.LAYER.DECOR);
         }
 
-        /**************************************CURRENT IMAGE PREVIEW BOX*/
+        /******************************************************CURRENT IMAGE PREVIEW BOX*/
 
         // Updates the image drawn in the current image preview box.
         public void UpdateCurrentImagePreview()
@@ -514,10 +538,89 @@ namespace MapMaker
             // Scale it down to the size of the preview box.
             Bitmap preview = new Bitmap(copy, PREVIEW_SIZE, PREVIEW_SIZE);
 
+            // Scale another copy down to the size of the recent image boxes.
+            Bitmap recent = new Bitmap(copy, 50, 50);
+
+            // Pass the selected image name and scaled down copy to the recent image list.
+            AddToRecentTiles(map.GetImagePalette().GetCurrentImage(), recent);
+
             // Set the preview display to the new scaled image and refresh the screen.
             currentImageDisplay.Image = preview;
             Refresh();
         }
 
+        /***********************************************************RECENT TILES BOXES*/
+
+        // Adds the passed picture to the recently used tiles list if it isn't already in there.
+        public void AddToRecentTiles(String name, Bitmap image)
+        {
+            if (!IsImageInRecentTileList(name))
+                InsertRecentTile(name, image);
+        }
+
+        // Check if the passed image is already in the recent tiles list.
+        public bool IsImageInRecentTileList(String name)
+        {
+            for (int i = 0; i < recentPictures.Length; i++)
+            {
+                if (recentPictures[i].Tag == name)
+                    return true;
+            }
+
+            return false;
+        }
+
+        // Places the passed image into the recent tiles list and pushes older tiles to the end of the list.
+        public void InsertRecentTile(String name, Bitmap image)
+        {
+            // The spot to insert the image.
+            int spot = FindOpenSpotOnRecentTilelist();
+
+            // Check if "spot" is a negative number. A negative number indicates that the recent tile list is full.
+            if (spot >= 0)
+            {
+                recentPictures[spot].Tag = name;
+                recentPictures[spot].Image = image;
+            }
+        }
+
+        // Finds the first open spot in the recent tile list.
+        public int FindOpenSpotOnRecentTilelist()
+        {
+            // Default value is -1. If this returns the negative number, we know the list is full.
+            int result = -1;
+
+            for (int i = 0; i < recentPictures.Length; i++)
+            {
+                // Find the spot with a tag of "No Image"
+                if (recentPictures[i].Tag.ToString().Equals(NO_RECENT_IMAGE)) 
+                {
+                    result = i;
+                    break;
+                }
+            }
+
+            return result;
+        }
+
+        // Handles the clicking of a recent tile button.
+        public void ProcessRecentTileClick(String name)
+        {
+            map.GetImagePalette().SetCurrentImage(name);
+
+            UpdateCurrentImagePreview();
+        }
+
+        // Filter the clicks on the recent tile buttons.
+        private void recent0_Click(object sender, EventArgs e) { ProcessRecentTileClick(recent0.Tag.ToString());}
+        private void recent1_Click(object sender, EventArgs e) { ProcessRecentTileClick(recent1.Tag.ToString()); }
+        private void recent2_Click(object sender, EventArgs e) { ProcessRecentTileClick(recent2.Tag.ToString()); }
+        private void recent3_Click(object sender, EventArgs e) { ProcessRecentTileClick(recent3.Tag.ToString()); }
+        private void recent4_Click(object sender, EventArgs e) { ProcessRecentTileClick(recent4.Tag.ToString()); }
+        private void recent5_Click(object sender, EventArgs e) { ProcessRecentTileClick(recent5.Tag.ToString()); }
+        private void recent6_Click(object sender, EventArgs e) { ProcessRecentTileClick(recent6.Tag.ToString()); }
+        private void recent7_Click(object sender, EventArgs e) { ProcessRecentTileClick(recent7.Tag.ToString()); }
+        private void recent8_Click(object sender, EventArgs e) { ProcessRecentTileClick(recent8.Tag.ToString()); }
+        private void recent9_Click(object sender, EventArgs e) { ProcessRecentTileClick(recent9.Tag.ToString()); }
     }
 }
