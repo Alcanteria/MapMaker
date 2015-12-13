@@ -191,6 +191,7 @@ namespace MapMaker
 
                     // This marks the completion of THIS tile's compositing. Increment the progress bar one step.
                     exportWindow.GetProgressBar().PerformStep();
+                    exportWindow.Refresh();
                 }
             }
 
