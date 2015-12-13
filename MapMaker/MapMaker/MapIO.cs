@@ -114,6 +114,12 @@ namespace MapMaker
         /* Exports the map to an image file. */
         public static void ExportMap(Map map, String fileName)
         {
+            // Create and configure the export progress window.
+            ExportProgressWindow exportWindow = new ExportProgressWindow();
+            exportWindow.GetProgressBar().Maximum = map.GetColumns() * map.GetRows();
+            exportWindow.GetProgressBar().Step = 1;
+            exportWindow.Show();
+
             // Create an emtpy bitmap based on the dimentions of the supplied map.
             Bitmap newBitmap = new Bitmap(map.GetColumns() * ImagePalette.IMAGE_SIZE, 
                                             map.GetRows() * ImagePalette.IMAGE_SIZE, 
@@ -182,10 +188,15 @@ namespace MapMaker
                     for (int a = 0; a < bottomImage.Width; a++)
                         for (int b = 0; b < bottomImage.Height; b++ )
                             newBitmap.SetPixel((i * ImagePalette.IMAGE_SIZE) + a, (j * ImagePalette.IMAGE_SIZE) + b, bottomImage.GetPixel(a,b));
+
+                    // This marks the completion of THIS tile's compositing. Increment the progress bar one step.
+                    exportWindow.GetProgressBar().PerformStep();
                 }
             }
 
             newBitmap.Save(fileName, ImageFormat.Png);
+
+            exportWindow.Hide();
 
             MessageBox.Show("Map Exported.");
         }
