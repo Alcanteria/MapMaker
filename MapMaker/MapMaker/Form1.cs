@@ -90,18 +90,21 @@ namespace MapMaker
         private const int Y_OFFSET = 33;
 
         // Location of the current mouse click on the map, filtered through any necessary offsets.
-        private Point mouseLocation = new Point();
+        private Point currentMouseLocation = new Point();
 
-        /****************************************************MISC*/
+        /****************************************************STATE CHECKS*/
 
         // Boolean to check the current state of erasing.
         private bool isErasing;
+
+        // Boolean to check if the map is mouse scrolling.
+        private bool isMouseScrolling;
 
         public mainForm()
         {
             InitializeComponent();
 
-            // Set up the key press listener.
+            // Set up the key listener.
             this.KeyPress += new KeyPressEventHandler(Form1_KeyPress);
 
             // Link our draw surface to the picture box on the windows form.
@@ -195,7 +198,9 @@ namespace MapMaker
             DRAW_SURFACE.MouseEnter += new System.EventHandler(pictureBox_MouseEnter);
             DRAW_SURFACE.MouseLeave += new System.EventHandler(pictureBox_MouseEnter);
 
-
+            DRAW_SURFACE.MouseDown += new MouseEventHandler(pictureBox_MouseDown);
+            DRAW_SURFACE.MouseUp += new MouseEventHandler(pictureBox_MouseUp);
+            DRAW_SURFACE.MouseMove += new MouseEventHandler(pictureBox_MouseMove);
         }
 
         /**********************************************************************PAINT*/
@@ -264,7 +269,8 @@ namespace MapMaker
         /***************************************************************KEYBOARD EVENTS*/
 
         // Handles Alpha-Numeric key presses.
-        void Form1_KeyPress(object sender, KeyPressEventArgs e) { }
+        void Form1_KeyPress(object sender, KeyPressEventArgs e) {}
+
 
         // This filters out arrow key presses when this button is selected on the windows form.
         private void loadImageButton_PreviewKeyDown (object sender, PreviewKeyDownEventArgs e) { CheckForArrowKeys(e); }
@@ -306,19 +312,19 @@ namespace MapMaker
             switch (e.KeyCode)
             {
                 case Keys.Left:
-                    map.SetMapRootX(map.GetMapRootX() + map.GetScrollAmount());
+                    map.ScrollLeft();
                     this.Refresh(); // Must call refresh or you won't see any change on screen.
                     break;
                 case Keys.Right:
-                    map.SetMapRootX(map.GetMapRootX() - map.GetScrollAmount());
+                    map.ScrollRight();
                     this.Refresh();
                     break;
                 case Keys.Up:
-                    map.SetMapRootY(map.GetMapRootY() - map.GetScrollAmount());
+                    map.ScrollUp();
                     this.Refresh();
                     break;
                 case Keys.Down:
-                    map.SetMapRootY(map.GetMapRootY() + map.GetScrollAmount());
+                    map.ScrollDown();
                     this.Refresh();
                     break;
             }
@@ -339,7 +345,7 @@ namespace MapMaker
             }
         }
 
-        /*************************************************************MOUSE CLICKS*/
+        /*************************************************************MOUSE EVENTS*/
 
         // Click event for the FLOOR select button.
         private void loadImageButton_Click(object sender, EventArgs e)
@@ -384,29 +390,77 @@ namespace MapMaker
         // Called when the map is clicked.
         private void pictureBox_Click(object sender, EventArgs e)
         {
-            // Figure out the location of the click.
-            SetMouseLocation(MousePosition.X, MousePosition.Y);
+            MouseEventArgs me = (MouseEventArgs)e;
 
-            // Check if erasing is turned on.
-            if (isErasing)
+            // LEFT MOUSE BUTTON------------------------------------
+            if (me.Button == System.Windows.Forms.MouseButtons.Left)
             {
-                map.GetClickedTile(mouseLocation).SetTileImage(map.GetCurrentLayer(), Tile.NO_IMAGE);
-                Refresh();
+                // Figure out the location of the click.
+                SetMouseLocation(MousePosition.X, MousePosition.Y);
+
+                // Check if erasing is turned on.
+                if (isErasing)
+                {
+                    map.GetClickedTile(currentMouseLocation).SetTileImage(map.GetCurrentLayer(), Tile.NO_IMAGE);
+                    Refresh();
+                }
+                // Check if there is a current image selected. If there is, set the tile to it.
+                else if (map.GetImagePalette().GetCurrentImage() != null)
+                {
+                    map.GetClickedTile(currentMouseLocation).SetTileImage(map.GetCurrentLayer(), map.GetImagePalette().GetCurrentImage());
+                    Refresh();
+                }
             }
-            // Check if there is a current image selected. If there is, set the tile to it.
-            else if (map.GetImagePalette().GetCurrentImage() != null)
+
+            // RIGHT MOUSE BUTTON-----------------------------------
+            if (me.Button == System.Windows.Forms.MouseButtons.Right)
             {
-                map.GetClickedTile(mouseLocation).SetTileImage(map.GetCurrentLayer(), map.GetImagePalette().GetCurrentImage());
-                Refresh();
+            
+            }
+
+        }
+        
+        // Mouse down event.
+        private void pictureBox_MouseDown(object sender, MouseEventArgs e)
+        {
+            // Check to see if the right mouse button was the button that was clicked.
+            if (e.Button == System.Windows.Forms.MouseButtons.Right)
+            {
+                isMouseScrolling = true;
+
+                // Set the location of the initial mouse click.
+                map.SetMouseScrollX(e.X);
+                map.SetMouseScrollY(e.Y);
             }
         }
 
+        // Mouse up event.
+        private void pictureBox_MouseUp(object sender, MouseEventArgs e)
+        {
+            // Check to see if the right mouse button was the button that was clicked.
+            if (e.Button == System.Windows.Forms.MouseButtons.Right)
+            {
+                isMouseScrolling = false;
+            }
+        }
+
+        // Mouse move event.
+        private void pictureBox_MouseMove(object sender, MouseEventArgs e)
+        {
+            // Check if mouse scrolling is active and pass the mouse location to the mouse scroll method if it is.
+            if (isMouseScrolling)
+            {
+                this.map.ScrollMouse(e.X, e.Y);
+                Refresh();
+            }
+        }
+        
         /* Sets the location of the mouse cursor on the map. Filters the location through any
             necessary offsets. */
         public void SetMouseLocation(int x, int y)
         {
-            mouseLocation.X = x - map.GetMapRootX() - Location.X - DRAW_SURFACE.Location.X - X_OFFSET;
-            mouseLocation.Y = y - map.GetMapRootY() - Location.Y - DRAW_SURFACE.Location.Y - Y_OFFSET;
+            currentMouseLocation.X = x - map.GetMapRootX() - Location.X - DRAW_SURFACE.Location.X - X_OFFSET;
+            currentMouseLocation.Y = y - map.GetMapRootY() - Location.Y - DRAW_SURFACE.Location.Y - Y_OFFSET;
         }
 
         // Sets the grid visibility to the opposite state of what it currently is.

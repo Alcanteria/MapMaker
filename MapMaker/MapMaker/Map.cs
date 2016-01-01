@@ -34,7 +34,7 @@ namespace MapMaker
             private int mapRootY;
 
             // The number of pixels the map moves when it is scrolled with the arrow keys.
-            private int scrollAmount = 20;
+            private int scrollAmount = DEFAULT_TILE_SIZE;
 
             // The files name of this map.
             private String mapName = null;
@@ -60,6 +60,12 @@ namespace MapMaker
 
             // Current layer the tiles are being placed on. Default is the floor layer
             private LAYER currentLayer = Map.LAYER.FLOOR;
+
+        /**************************************MOUSE SCROLLING*/
+
+            // The initial click location at the start of a mouse scroll.
+            private int mouseScrollX;
+            private int mouseScrollY;
 
         /**************************************CONSTRUCTOR*/
 
@@ -99,6 +105,10 @@ namespace MapMaker
         public int      GetMapRootY()                   { return            mapRootY; }
         public void     SetScrollAmount(int amount)     { scrollAmount  =   amount; }
         public int      GetScrollAmount()               { return            scrollAmount; }
+        public void     SetMouseScrollX(int x)          { mouseScrollX  =   x; }
+        public int      GetMouseScrollX()               { return            mouseScrollX; }
+        public void     SetMouseScrollY(int y)          { mouseScrollY  =   y; }
+        public int      GetMouseScrollY()               { return            mouseScrollY; }
         public Tile[,]  GetTiles()                      { return            TILES; }
         public static String GetDefaultImage()          { return            DEFAULT_IMAGE; }
         public ImagePalette GetImagePalette()           { return            imagePalette; }
@@ -158,6 +168,36 @@ namespace MapMaker
             for(int i = 0; i < GetColumns(); i++)
                 for(int j = 0; j < GetRows(); j++)
                     GetTiles()[i,j].SetTileImage(Map.LAYER.FLOOR, image);
+        }
+
+        /***************************************MAP SCROLLING*/
+
+        // Keyboard scroll left.
+        public void ScrollLeft(){SetMapRootX(GetMapRootX() + GetScrollAmount());}
+
+        // Keyboard scroll right.
+        public void ScrollRight(){SetMapRootX(GetMapRootX() - GetScrollAmount());}
+
+        // Keyboard scroll up.
+        public void ScrollUp(){SetMapRootY(GetMapRootY() + GetScrollAmount());}
+
+        // Keyboard scroll down.
+        public void ScrollDown(){SetMapRootY(GetMapRootY() - GetScrollAmount());}
+
+        // Mouse Scrolling
+        public void ScrollMouse(int x, int y)
+        {
+            // Find the distance (in pixels) between the current mouse position and the previous mouse scroll location.
+            int newX = x - GetMouseScrollX();
+            int newY = y - GetMouseScrollY();
+
+            // Set the map root coordinates based on the above distance.
+            SetMapRootX(GetMapRootX() + newX);
+            SetMapRootY(GetMapRootY() + newY);
+
+            // Update the map scroll location to the current mouse location.
+            SetMouseScrollX(x);
+            SetMouseScrollY(y);
         }
 
     }
