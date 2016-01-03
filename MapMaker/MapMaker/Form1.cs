@@ -80,6 +80,9 @@ namespace MapMaker
             // Array to store each preivew box
             private PictureBox[] recentPictures = new PictureBox[10];
 
+            // The default size of the recent pictures boxes.
+            private int RECENT_PICTURE_SIZE = 40;
+
             // Flag for an empty picture box.
             public String NO_RECENT_IMAGE = "NO RECENT IMAGE";
 
@@ -177,10 +180,13 @@ namespace MapMaker
             recentPictures[8] = recent8;
             recentPictures[9] = recent9;
 
-            // Set all of the image tags in the recent pictures array to emtpy.
+            // Set all of the image tags in the recent pictures array to emtpy and set their size.
             for (int i = 0; i < recentPictures.Length; i++)
+            {
                 recentPictures[i].Tag = NO_RECENT_IMAGE;
-
+                recentPictures[i].Width = RECENT_PICTURE_SIZE;
+                recentPictures[i].Height = RECENT_PICTURE_SIZE;
+            }
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -204,6 +210,9 @@ namespace MapMaker
         }
 
         /**********************************************************************PAINT*/
+        /**********************************************************************PAINT*/
+        /**********************************************************************PAINT*/
+
         private void drawSurface_Paint(object sender, PaintEventArgs e)
         {
             // Good ol' graphics object.
@@ -256,7 +265,7 @@ namespace MapMaker
             }
         }
 
-        // Cycle through each tile in the map and draw it.
+        // Draw the tile image at the passed X/Y location.
         private void DrawTile(Graphics g, int x, int y, Map.LAYER layer)
         {
             g.DrawImage(map.GetTileImage(x, y, layer),
@@ -266,6 +275,8 @@ namespace MapMaker
                      map.GetTileSize());
         }
 
+        /***************************************************************KEYBOARD EVENTS*/
+        /***************************************************************KEYBOARD EVENTS*/
         /***************************************************************KEYBOARD EVENTS*/
 
         // Handles Alpha-Numeric key presses.
@@ -346,6 +357,8 @@ namespace MapMaker
         }
 
         /*************************************************************MOUSE EVENTS*/
+        /*************************************************************MOUSE EVENTS*/
+        /*************************************************************MOUSE EVENTS*/
 
         // Click event for the FLOOR select button.
         private void loadImageButton_Click(object sender, EventArgs e)
@@ -401,14 +414,22 @@ namespace MapMaker
                 // Check if erasing is turned on.
                 if (isErasing)
                 {
-                    map.GetClickedTile(currentMouseLocation).SetTileImage(map.GetCurrentLayer(), Tile.NO_IMAGE);
-                    Refresh();
+                    // Make sure a valid tile was clicked.
+                    if (map.ClickedOnTile(currentMouseLocation))
+                    {
+                        map.GetClickedTile(currentMouseLocation).SetTileImage(map.GetCurrentLayer(), Tile.NO_IMAGE);
+                        Refresh();
+                    }
                 }
                 // Check if there is a current image selected. If there is, set the tile to it.
                 else if (map.GetImagePalette().GetCurrentImage() != null)
                 {
-                    map.GetClickedTile(currentMouseLocation).SetTileImage(map.GetCurrentLayer(), map.GetImagePalette().GetCurrentImage());
-                    Refresh();
+                    // Make sure a valid tile was clicked.
+                    if (map.ClickedOnTile(currentMouseLocation))
+                    {
+                        map.GetClickedTile(currentMouseLocation).SetTileImage(map.GetCurrentLayer(), map.GetImagePalette().GetCurrentImage());
+                        Refresh();
+                    }
                 }
             }
 
@@ -506,6 +527,8 @@ namespace MapMaker
         }
 
         /*************************************************************FILE HANDLING*/
+        /*************************************************************FILE HANDLING*/
+        /*************************************************************FILE HANDLING*/
 
         // Regular "Save" method.
         public void SaveMap()
@@ -570,9 +593,25 @@ namespace MapMaker
             }
         }
 
-        /***********************************TEST BUTTON*/
-        private void testButtonMenuItem_Click(object sender, EventArgs e) { }
+        // Zoom in menu bar item.
+        private void zoomInToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            map.ZoomIn();
+            Refresh();
+        }
 
+        // Zoom out menu bar item.
+        private void zoomOutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            map.ZoomOut();
+            Refresh();
+        }
+
+        /***********************************TEST BUTTON*/
+        private void testButtonMenuItem_Click(object sender, EventArgs e) {}
+
+        /*********************************************************RADIO BUTTONS*/
+        /*********************************************************RADIO BUTTONS*/
         /*********************************************************RADIO BUTTONS*/
 
         private void radioButtons_CheckedChanged(Object sender, EventArgs e)
@@ -587,6 +626,8 @@ namespace MapMaker
         }
 
         /******************************************************CURRENT IMAGE PREVIEW BOX*/
+        /******************************************************CURRENT IMAGE PREVIEW BOX*/
+        /******************************************************CURRENT IMAGE PREVIEW BOX*/
 
         // Updates the image drawn in the current image preview box.
         public void UpdateCurrentImagePreview()
@@ -598,7 +639,7 @@ namespace MapMaker
             Bitmap preview = new Bitmap(copy, PREVIEW_SIZE, PREVIEW_SIZE);
 
             // Scale another copy down to the size of the recent image boxes.
-            Bitmap recent = new Bitmap(copy, 50, 50);
+            Bitmap recent = new Bitmap(copy, RECENT_PICTURE_SIZE, RECENT_PICTURE_SIZE);
 
             // Pass the selected image name and scaled down copy to the recent image list.
             AddToRecentTiles(map.GetImagePalette().GetCurrentImage(), recent);
@@ -608,6 +649,8 @@ namespace MapMaker
             Refresh();
         }
 
+        /***********************************************************RECENT TILES BOXES*/
+        /***********************************************************RECENT TILES BOXES*/
         /***********************************************************RECENT TILES BOXES*/
 
         // Adds the passed picture to the recently used tiles list if it isn't already in there.
@@ -704,6 +747,8 @@ namespace MapMaker
         private void recent8_Click(object sender, EventArgs e) { ProcessRecentTileClick(recent8.Tag.ToString()); }
         private void recent9_Click(object sender, EventArgs e) { ProcessRecentTileClick(recent9.Tag.ToString()); }
 
+        /****************************************************CURSOR CHANGING*/
+        /****************************************************CURSOR CHANGING*/
         /****************************************************CURSOR CHANGING*/
 
         // Event for when the mouse cursor enters the drawing space.

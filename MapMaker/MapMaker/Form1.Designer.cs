@@ -52,31 +52,33 @@
             this.eraseButton = new System.Windows.Forms.Button();
             this.currentImageDisplay = new System.Windows.Forms.PictureBox();
             this.recentTileGroupBox = new System.Windows.Forms.GroupBox();
-            this.recent0 = new System.Windows.Forms.PictureBox();
-            this.recent1 = new System.Windows.Forms.PictureBox();
-            this.recent2 = new System.Windows.Forms.PictureBox();
-            this.recent3 = new System.Windows.Forms.PictureBox();
-            this.recent4 = new System.Windows.Forms.PictureBox();
-            this.recent5 = new System.Windows.Forms.PictureBox();
-            this.recent6 = new System.Windows.Forms.PictureBox();
-            this.recent7 = new System.Windows.Forms.PictureBox();
-            this.recent8 = new System.Windows.Forms.PictureBox();
             this.recent9 = new System.Windows.Forms.PictureBox();
+            this.recent8 = new System.Windows.Forms.PictureBox();
+            this.recent7 = new System.Windows.Forms.PictureBox();
+            this.recent6 = new System.Windows.Forms.PictureBox();
+            this.recent5 = new System.Windows.Forms.PictureBox();
+            this.recent4 = new System.Windows.Forms.PictureBox();
+            this.recent3 = new System.Windows.Forms.PictureBox();
+            this.recent2 = new System.Windows.Forms.PictureBox();
+            this.recent1 = new System.Windows.Forms.PictureBox();
+            this.recent0 = new System.Windows.Forms.PictureBox();
+            this.zoomInToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.zoomOutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.layerGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.currentImageDisplay)).BeginInit();
             this.recentTileGroupBox.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.recent0)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.recent1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.recent2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.recent3)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.recent4)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.recent5)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.recent6)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.recent7)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.recent8)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.recent9)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.recent8)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.recent7)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.recent6)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.recent5)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.recent4)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.recent3)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.recent2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.recent1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.recent0)).BeginInit();
             this.SuspendLayout();
             // 
             // pictureBox
@@ -185,7 +187,9 @@
             // viewToolStripMenuItem
             // 
             this.viewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.gridMenuBar});
+            this.gridMenuBar,
+            this.zoomInToolStripMenuItem,
+            this.zoomOutToolStripMenuItem});
             this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
             this.viewToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
             this.viewToolStripMenuItem.Text = "View";
@@ -307,93 +311,17 @@
             this.recentTileGroupBox.TabStop = false;
             this.recentTileGroupBox.Text = "Recent Tiles";
             // 
-            // recent0
+            // recent9
             // 
-            this.recent0.BackColor = System.Drawing.SystemColors.Window;
-            this.recent0.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.recent0.Location = new System.Drawing.Point(7, 22);
-            this.recent0.Name = "recent0";
-            this.recent0.Size = new System.Drawing.Size(40, 40);
-            this.recent0.TabIndex = 0;
-            this.recent0.TabStop = false;
-            this.recent0.Click += new System.EventHandler(this.recent0_Click);
-            // 
-            // recent1
-            // 
-            this.recent1.BackColor = System.Drawing.SystemColors.Window;
-            this.recent1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.recent1.Location = new System.Drawing.Point(61, 22);
-            this.recent1.Name = "recent1";
-            this.recent1.Size = new System.Drawing.Size(40, 40);
-            this.recent1.TabIndex = 1;
-            this.recent1.TabStop = false;
-            this.recent1.Click += new System.EventHandler(this.recent1_Click);
-            // 
-            // recent2
-            // 
-            this.recent2.BackColor = System.Drawing.SystemColors.Window;
-            this.recent2.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.recent2.Location = new System.Drawing.Point(6, 68);
-            this.recent2.Name = "recent2";
-            this.recent2.Size = new System.Drawing.Size(40, 40);
-            this.recent2.TabIndex = 2;
-            this.recent2.TabStop = false;
-            this.recent2.Click += new System.EventHandler(this.recent2_Click);
-            // 
-            // recent3
-            // 
-            this.recent3.BackColor = System.Drawing.SystemColors.Window;
-            this.recent3.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.recent3.Location = new System.Drawing.Point(61, 68);
-            this.recent3.Name = "recent3";
-            this.recent3.Size = new System.Drawing.Size(40, 40);
-            this.recent3.TabIndex = 3;
-            this.recent3.TabStop = false;
-            this.recent3.Click += new System.EventHandler(this.recent3_Click);
-            // 
-            // recent4
-            // 
-            this.recent4.BackColor = System.Drawing.SystemColors.Window;
-            this.recent4.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.recent4.Location = new System.Drawing.Point(6, 114);
-            this.recent4.Name = "recent4";
-            this.recent4.Size = new System.Drawing.Size(40, 40);
-            this.recent4.TabIndex = 4;
-            this.recent4.TabStop = false;
-            this.recent4.Click += new System.EventHandler(this.recent4_Click);
-            // 
-            // recent5
-            // 
-            this.recent5.BackColor = System.Drawing.SystemColors.Window;
-            this.recent5.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.recent5.Location = new System.Drawing.Point(61, 114);
-            this.recent5.Name = "recent5";
-            this.recent5.Size = new System.Drawing.Size(40, 40);
-            this.recent5.TabIndex = 5;
-            this.recent5.TabStop = false;
-            this.recent5.Click += new System.EventHandler(this.recent5_Click);
-            // 
-            // recent6
-            // 
-            this.recent6.BackColor = System.Drawing.SystemColors.Window;
-            this.recent6.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.recent6.Location = new System.Drawing.Point(6, 160);
-            this.recent6.Name = "recent6";
-            this.recent6.Size = new System.Drawing.Size(40, 40);
-            this.recent6.TabIndex = 6;
-            this.recent6.TabStop = false;
-            this.recent6.Click += new System.EventHandler(this.recent6_Click);
-            // 
-            // recent7
-            // 
-            this.recent7.BackColor = System.Drawing.SystemColors.Window;
-            this.recent7.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.recent7.Location = new System.Drawing.Point(61, 160);
-            this.recent7.Name = "recent7";
-            this.recent7.Size = new System.Drawing.Size(40, 40);
-            this.recent7.TabIndex = 7;
-            this.recent7.TabStop = false;
-            this.recent7.Click += new System.EventHandler(this.recent7_Click);
+            this.recent9.BackColor = System.Drawing.SystemColors.Window;
+            this.recent9.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.recent9.Location = new System.Drawing.Point(61, 206);
+            this.recent9.Name = "recent9";
+            this.recent9.Size = new System.Drawing.Size(40, 40);
+            this.recent9.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.recent9.TabIndex = 9;
+            this.recent9.TabStop = false;
+            this.recent9.Click += new System.EventHandler(this.recent9_Click);
             // 
             // recent8
             // 
@@ -402,20 +330,122 @@
             this.recent8.Location = new System.Drawing.Point(6, 206);
             this.recent8.Name = "recent8";
             this.recent8.Size = new System.Drawing.Size(40, 40);
+            this.recent8.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.recent8.TabIndex = 8;
             this.recent8.TabStop = false;
             this.recent8.Click += new System.EventHandler(this.recent8_Click);
             // 
-            // recent9
+            // recent7
             // 
-            this.recent9.BackColor = System.Drawing.SystemColors.Window;
-            this.recent9.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.recent9.Location = new System.Drawing.Point(61, 206);
-            this.recent9.Name = "recent9";
-            this.recent9.Size = new System.Drawing.Size(40, 40);
-            this.recent9.TabIndex = 9;
-            this.recent9.TabStop = false;
-            this.recent9.Click += new System.EventHandler(this.recent9_Click);
+            this.recent7.BackColor = System.Drawing.SystemColors.Window;
+            this.recent7.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.recent7.Location = new System.Drawing.Point(61, 160);
+            this.recent7.Name = "recent7";
+            this.recent7.Size = new System.Drawing.Size(40, 40);
+            this.recent7.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.recent7.TabIndex = 7;
+            this.recent7.TabStop = false;
+            this.recent7.Click += new System.EventHandler(this.recent7_Click);
+            // 
+            // recent6
+            // 
+            this.recent6.BackColor = System.Drawing.SystemColors.Window;
+            this.recent6.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.recent6.Location = new System.Drawing.Point(6, 160);
+            this.recent6.Name = "recent6";
+            this.recent6.Size = new System.Drawing.Size(40, 40);
+            this.recent6.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.recent6.TabIndex = 6;
+            this.recent6.TabStop = false;
+            this.recent6.Click += new System.EventHandler(this.recent6_Click);
+            // 
+            // recent5
+            // 
+            this.recent5.BackColor = System.Drawing.SystemColors.Window;
+            this.recent5.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.recent5.Location = new System.Drawing.Point(61, 114);
+            this.recent5.Name = "recent5";
+            this.recent5.Size = new System.Drawing.Size(40, 40);
+            this.recent5.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.recent5.TabIndex = 5;
+            this.recent5.TabStop = false;
+            this.recent5.Click += new System.EventHandler(this.recent5_Click);
+            // 
+            // recent4
+            // 
+            this.recent4.BackColor = System.Drawing.SystemColors.Window;
+            this.recent4.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.recent4.Location = new System.Drawing.Point(6, 114);
+            this.recent4.Name = "recent4";
+            this.recent4.Size = new System.Drawing.Size(40, 40);
+            this.recent4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.recent4.TabIndex = 4;
+            this.recent4.TabStop = false;
+            this.recent4.Click += new System.EventHandler(this.recent4_Click);
+            // 
+            // recent3
+            // 
+            this.recent3.BackColor = System.Drawing.SystemColors.Window;
+            this.recent3.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.recent3.Location = new System.Drawing.Point(61, 68);
+            this.recent3.Name = "recent3";
+            this.recent3.Size = new System.Drawing.Size(40, 40);
+            this.recent3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.recent3.TabIndex = 3;
+            this.recent3.TabStop = false;
+            this.recent3.Click += new System.EventHandler(this.recent3_Click);
+            // 
+            // recent2
+            // 
+            this.recent2.BackColor = System.Drawing.SystemColors.Window;
+            this.recent2.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.recent2.Location = new System.Drawing.Point(6, 68);
+            this.recent2.Name = "recent2";
+            this.recent2.Size = new System.Drawing.Size(40, 40);
+            this.recent2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.recent2.TabIndex = 2;
+            this.recent2.TabStop = false;
+            this.recent2.Click += new System.EventHandler(this.recent2_Click);
+            // 
+            // recent1
+            // 
+            this.recent1.BackColor = System.Drawing.SystemColors.Window;
+            this.recent1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.recent1.Location = new System.Drawing.Point(61, 22);
+            this.recent1.Name = "recent1";
+            this.recent1.Size = new System.Drawing.Size(40, 40);
+            this.recent1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.recent1.TabIndex = 1;
+            this.recent1.TabStop = false;
+            this.recent1.Click += new System.EventHandler(this.recent1_Click);
+            // 
+            // recent0
+            // 
+            this.recent0.BackColor = System.Drawing.SystemColors.Window;
+            this.recent0.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.recent0.Location = new System.Drawing.Point(7, 22);
+            this.recent0.Name = "recent0";
+            this.recent0.Size = new System.Drawing.Size(40, 40);
+            this.recent0.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.recent0.TabIndex = 0;
+            this.recent0.TabStop = false;
+            this.recent0.Click += new System.EventHandler(this.recent0_Click);
+            // 
+            // zoomInToolStripMenuItem
+            // 
+            this.zoomInToolStripMenuItem.Name = "zoomInToolStripMenuItem";
+            this.zoomInToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Oemplus)));
+            this.zoomInToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
+            this.zoomInToolStripMenuItem.Text = "Zoom In";
+            this.zoomInToolStripMenuItem.Click += new System.EventHandler(this.zoomInToolStripMenuItem_Click);
+            // 
+            // zoomOutToolStripMenuItem
+            // 
+            this.zoomOutToolStripMenuItem.Name = "zoomOutToolStripMenuItem";
+            this.zoomOutToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.OemMinus)));
+            this.zoomOutToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
+            this.zoomOutToolStripMenuItem.Text = "Zoom Out";
+            this.zoomOutToolStripMenuItem.Click += new System.EventHandler(this.zoomOutToolStripMenuItem_Click);
             // 
             // mainForm
             // 
@@ -442,16 +472,16 @@
             this.layerGroupBox.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.currentImageDisplay)).EndInit();
             this.recentTileGroupBox.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.recent0)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.recent1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.recent2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.recent3)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.recent4)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.recent5)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.recent6)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.recent7)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.recent8)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.recent9)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.recent8)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.recent7)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.recent6)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.recent5)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.recent4)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.recent3)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.recent2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.recent1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.recent0)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -492,6 +522,8 @@
         private System.Windows.Forms.PictureBox recent2;
         private System.Windows.Forms.PictureBox recent1;
         private System.Windows.Forms.PictureBox recent0;
+        private System.Windows.Forms.ToolStripMenuItem zoomInToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem zoomOutToolStripMenuItem;
 
     }
 }

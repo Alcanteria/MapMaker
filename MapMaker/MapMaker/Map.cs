@@ -26,6 +26,18 @@ namespace MapMaker
             // The size in pixels to draw each tile.
             private int tileSize = DEFAULT_TILE_SIZE;
 
+            // The current level of zoom magnification.
+            private float zoomLevel = 1;
+
+            // The highest possible value of zoom. Capped so the map can't be zoomed into the subatomic level.
+            private float MAX_ZOOM = 1.5f;
+
+            // The lowest possible value of zoom. Capped so the map can't be zoomed out into the void.
+            private float MIN_ZOOM = .5f;
+
+            // The amout of increase or decrease in an interation of zoom (in or out).
+            private float zoomStep = .1f;
+
             // Determines if the grid should be shown.
             private bool isGridOn;
 
@@ -68,6 +80,8 @@ namespace MapMaker
             private int mouseScrollY;
 
         /**************************************CONSTRUCTOR*/
+        /**************************************CONSTRUCTOR*/
+        /**************************************CONSTRUCTOR*/
 
         // Creates a map with the supplied dimensions (in tiles, not pixels).
         public Map(int columns, int rows)
@@ -88,6 +102,8 @@ namespace MapMaker
             NUMBER_OF_LAYERS = Enum.GetValues(typeof(Map.LAYER)).Length;
         }
 
+        /**************************************ACCESSORS*/
+        /**************************************ACCESSORS*/
         /**************************************ACCESSORS*/
 
         public void     SetColumns(int numberOfColumns) { columns       =   numberOfColumns; }
@@ -116,6 +132,12 @@ namespace MapMaker
         public void     SetCurrentLayer(LAYER l)        { currentLayer  =   l; }
         public void     SetMapName(String name)         { mapName       =   name; }
         public String   GetMapName()                    { return            mapName; }
+        public void     SetZoomLevel(float zoom)          { zoomLevel     =   zoom; }
+        public float    GetZoomLevel()                  { return            zoomLevel; }
+        public void     SetZoomStep(float step)         { zoomStep      =   step; }
+        public float    GetZoomStep()                   { return            zoomStep; }
+        public float    GetMaxZoomLevel()               { return            MAX_ZOOM; }
+        public float    GetMinZoomLevel()               { return            MIN_ZOOM; }
 
         // Retreives the image for the tile at the specified index, on the specified layer.
         public Bitmap GetTileImage(int x, int y, Map.LAYER layer)
@@ -142,7 +164,28 @@ namespace MapMaker
             }
         }
 
-        // Rebuilds the tile array based. Usually called after the map's rows and columns have changed.
+        // Checks if the click was on a tile on the map, or out of the map bounds.
+        public Boolean ClickedOnTile(Point click)
+        {
+            // Translate the click coordinates into an array index number.
+            int x = click.X / GetTileSize();
+            int y = click.Y / GetTileSize();
+
+            // FIRST: make sure either of the coordinates aren't negative, and therefore out of bounds.
+            if (click.X >= 0 && click.Y >= 0)
+            {
+                // SECOND: Check to make sure the index number is not out of bounds of the array.
+                if (x >= 0 && x <= (GetColumns() - 1) &&
+                    y >= 0 && y <= (GetRows() - 1))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        // Rebuilds the tile array. Usually called after the map's rows and columns have changed.
         public void RebuildMap()
         {
             /* Check to make sure the values for rows and columns are't negative numbers or zero. 
@@ -170,6 +213,8 @@ namespace MapMaker
                     GetTiles()[i,j].SetTileImage(Map.LAYER.FLOOR, image);
         }
 
+        /***************************************MAP SCROLLING*/
+        /***************************************MAP SCROLLING*/
         /***************************************MAP SCROLLING*/
 
         // Keyboard scroll left.
@@ -200,5 +245,69 @@ namespace MapMaker
             SetMouseScrollY(y);
         }
 
+        /******************************************MAP ZOOMING*/
+        /******************************************MAP ZOOMING*/
+        /******************************************MAP ZOOMING*/
+
+        // Increases the zoom level.
+        public void ZoomIn()
+        {
+            // Make sure the zoom level hasn't exceeded the maximum allowed level.
+            if(GetZoomLevel() <= GetMaxZoomLevel())
+            {
+                // Increase the zoom level by one step.
+                SetZoomLevel(GetZoomLevel() + GetZoomStep());
+
+                // Record the old tile size (in pixels).
+                int previousTileSize = GetTileSize();
+
+                // Set the new tile size.
+                int newTileSize = (int)(DEFAULT_TILE_SIZE * GetZoomLevel());
+
+                // Change the tile size to the new size.
+                SetTileSize(newTileSize);
+
+                // Set the map root location. We change this so the view stays centered when the map is zoomed in/out.
+                AdjustMapRootBasedOnZoom(previousTileSize, newTileSize);
+
+                Console.WriteLine("Zoom level = " + GetZoomLevel());
+                Console.WriteLine("Tile Size = " + GetTileSize());
+            }
+        }
+
+        // Decreases the zoom level.
+        public void ZoomOut()
+        {
+            // Make sure the zoom level hasn't exceeded the minimum allowed level.
+            if (GetZoomLevel() >= GetMinZoomLevel())
+            {
+                // Increase the zoom level by one step.
+                SetZoomLevel(GetZoomLevel() - GetZoomStep());
+
+                // Record the old tile size (in pixels).
+                int previousTileSize = GetTileSize();
+
+                // Set the new tile size.
+                int newTileSize = (int)(DEFAULT_TILE_SIZE * GetZoomLevel());
+
+                // Change the tile size to the new size.
+                SetTileSize(newTileSize);
+
+                // Set the map root location. We change this so the view stays centered when the map is zoomed in/out.
+                AdjustMapRootBasedOnZoom(previousTileSize, newTileSize);
+
+                Console.WriteLine("Zoom level = " + GetZoomLevel());
+                Console.WriteLine("Tile Size = " + GetTileSize());
+            }
+        }
+
+        // Adjusts the map root location after the zoom level has changed.
+        public void AdjustMapRootBasedOnZoom(int previousSize, int newSize)
+        {
+            int sizeDifference = previousSize - newSize;
+
+            SetMapRootX(GetMapRootX() + ((sizeDifference / 2) * GetColumns()));
+            SetMapRootY(GetMapRootY() + ((sizeDifference / 2) * GetRows()));
+        }
     }
 }
