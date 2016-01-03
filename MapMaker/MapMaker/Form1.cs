@@ -168,6 +168,10 @@ namespace MapMaker
             // Initiialize the new map dialog box.
             createMapDialog = new newMapDialog(this);
 
+            // Set the description text for the zoom in/out shortcut keys.
+            this.zoomInToolStripMenuItem.ShortcutKeyDisplayString = "Ctrl +";
+            this.zoomOutToolStripMenuItem.ShortcutKeyDisplayString = "Ctrl -";
+
             // Link all of the preview picture boxes to the elements in the picture box array.
             recentPictures[0] = recent0;
             recentPictures[1] = recent1;
@@ -207,6 +211,8 @@ namespace MapMaker
             DRAW_SURFACE.MouseDown += new MouseEventHandler(pictureBox_MouseDown);
             DRAW_SURFACE.MouseUp += new MouseEventHandler(pictureBox_MouseUp);
             DRAW_SURFACE.MouseMove += new MouseEventHandler(pictureBox_MouseMove);
+
+            this.MouseWheel += new MouseEventHandler(Form1_MouseWheel);
         }
 
         /**********************************************************************PAINT*/
@@ -482,6 +488,23 @@ namespace MapMaker
         {
             currentMouseLocation.X = x - map.GetMapRootX() - Location.X - DRAW_SURFACE.Location.X - X_OFFSET;
             currentMouseLocation.Y = y - map.GetMapRootY() - Location.Y - DRAW_SURFACE.Location.Y - Y_OFFSET;
+        }
+
+        // Handles the mousewheel events.
+        private void Form1_MouseWheel(Object sender, MouseEventArgs e)
+        {
+            // Check which direction the mousewheel was rolled and act accordingly.
+            if(e.Delta >= 0)
+            {
+                map.ZoomIn();
+                Refresh();
+            }
+            else
+            {
+                map.ZoomOut();
+                Refresh();
+            }
+                
         }
 
         // Sets the grid visibility to the opposite state of what it currently is.

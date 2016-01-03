@@ -269,9 +269,6 @@ namespace MapMaker
 
                 // Set the map root location. We change this so the view stays centered when the map is zoomed in/out.
                 AdjustMapRootBasedOnZoom(previousTileSize, newTileSize);
-
-                Console.WriteLine("Zoom level = " + GetZoomLevel());
-                Console.WriteLine("Tile Size = " + GetTileSize());
             }
         }
 
@@ -295,9 +292,6 @@ namespace MapMaker
 
                 // Set the map root location. We change this so the view stays centered when the map is zoomed in/out.
                 AdjustMapRootBasedOnZoom(previousTileSize, newTileSize);
-
-                Console.WriteLine("Zoom level = " + GetZoomLevel());
-                Console.WriteLine("Tile Size = " + GetTileSize());
             }
         }
 
