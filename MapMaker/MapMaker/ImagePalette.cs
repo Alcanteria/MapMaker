@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
 using System.Windows.Forms;
+using System.IO;
+using System.Reflection;
 
 namespace MapMaker
 {
@@ -25,8 +27,6 @@ namespace MapMaker
             // Initialize the Dictionary.
             images = new Dictionary<String, Bitmap>();
 
-            // Load the default image.
-            LoadDefaultImage();
         }
 
         // Adds a new image to the library, provided it already isn't in there.
@@ -39,15 +39,19 @@ namespace MapMaker
             }
             else
                 Console.WriteLine(name + " already in image library.");
+
+            PrintImageList();
         }
 
         // Loads the predermined default image file.
-        public void LoadDefaultImage()
+        public void LoadDefaultImage(Image image)
         {
             try
             {
-                // Load a jpg from local drive.
-                Bitmap defaultImage = new Bitmap(Image.FromFile("C:\\Users\\Nick\\Desktop\\" + Map.GetDefaultImage()), IMAGE_SIZE, IMAGE_SIZE);
+                // Load the default image into a properly sized copy
+                Bitmap newImage = new Bitmap(image, IMAGE_SIZE, IMAGE_SIZE);
+
+                Bitmap defaultImage = (Bitmap)newImage.Clone();
 
                 // Add the key to the default image to the palette.
                 AddNewImage(Map.GetDefaultImage(), defaultImage);
@@ -74,6 +78,16 @@ namespace MapMaker
                     return images[name];
 
             return images[Map.GetDefaultImage()];
+        }
+
+        // Prints out a list of loaded images to the console.
+        public void PrintImageList()
+        {
+            foreach (KeyValuePair<String, Bitmap> entry in images)
+            {
+                Console.WriteLine("Image Library+++++++++");
+                Console.WriteLine(entry.Key);
+            }
         }
     }
 }

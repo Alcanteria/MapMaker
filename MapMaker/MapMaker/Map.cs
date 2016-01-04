@@ -202,6 +202,8 @@ namespace MapMaker
             for (int i = 0; i < columns; i++)
                 for (int j = 0; j < rows; j++)
                     TILES[i, j] = new Tile();
+
+            FillFloor(GetDefaultImage());
         }
 
         // Sets every floor tile to the passed image.

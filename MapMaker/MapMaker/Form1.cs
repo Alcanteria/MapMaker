@@ -8,6 +8,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Timers;
+using System.Reflection;
+using System.IO;
 
 namespace MapMaker
 {
@@ -75,6 +78,9 @@ namespace MapMaker
         // The size of the current image preview box.
         int PREVIEW_SIZE = 50;
 
+        // Create the splash screen.
+        //SplashScreen SPLASH_SCREEN = new SplashScreen();
+
         /******************************RECENT PICTURES*/
 
             // Array to store each preivew box
@@ -102,6 +108,9 @@ namespace MapMaker
 
         // Boolean to check if the map is mouse scrolling.
         private bool isMouseScrolling;
+
+        // Boolean to check if the splash screen is showing.
+        private bool isSplashScreenShowing = true;
 
         public mainForm()
         {
@@ -213,6 +222,19 @@ namespace MapMaker
             DRAW_SURFACE.MouseMove += new MouseEventHandler(pictureBox_MouseMove);
 
             this.MouseWheel += new MouseEventHandler(Form1_MouseWheel);
+
+            // Load the default image from an embedded resource file.
+            System.Reflection.Assembly myAssembly = System.Reflection.Assembly.GetExecutingAssembly();
+            System.IO.Stream file = myAssembly.GetManifestResourceStream("MapMaker.Wood,horizontal.jpg");
+            
+            Image image = Image.FromStream(file);
+
+            Bitmap newImage = new Bitmap(image, ImagePalette.IMAGE_SIZE, ImagePalette.IMAGE_SIZE);
+
+            Bitmap defaultImage = (Bitmap)newImage.Clone();
+
+            // Pass the loaded image into the default image location in the image palette.
+            map.GetImagePalette().AddNewImage(Map.GetDefaultImage(), defaultImage);
         }
 
         /**********************************************************************PAINT*/
@@ -274,11 +296,12 @@ namespace MapMaker
         // Draw the tile image at the passed X/Y location.
         private void DrawTile(Graphics g, int x, int y, Map.LAYER layer)
         {
+            
             g.DrawImage(map.GetTileImage(x, y, layer),
-                (x * map.GetTileSize()) + map.GetMapRootX(),
-                (y * map.GetTileSize()) + map.GetMapRootY(),
-                     map.GetTileSize(),
-                     map.GetTileSize());
+                        (x * map.GetTileSize()) + map.GetMapRootX(),
+                        (y * map.GetTileSize()) + map.GetMapRootY(),
+                            map.GetTileSize(),
+                            map.GetTileSize());
         }
 
         /***************************************************************KEYBOARD EVENTS*/
@@ -578,7 +601,10 @@ namespace MapMaker
         public void CreateNewMap(int x, int y)
         {
             map = new Map(x, y);
+            map.RebuildMap();
+            map.GetImagePalette().PrintImageList();
             Refresh();
+            
         }
 
         // Method for loading a saved map.
@@ -786,5 +812,13 @@ namespace MapMaker
 
         // Event for when the mouse exits the draw space.
         private void pictureBox_MouseLeave(Object sender, System.EventArgs e){}
+
+
+        /************************************************************TIMER EVENT*/
+        /************************************************************TIMER EVENT*/
+        /************************************************************TIMER EVENT*/
+
+        
+
     }
 }
