@@ -222,19 +222,6 @@ namespace MapMaker
             DRAW_SURFACE.MouseMove += new MouseEventHandler(pictureBox_MouseMove);
 
             this.MouseWheel += new MouseEventHandler(Form1_MouseWheel);
-
-            // Load the default image from an embedded resource file.
-            System.Reflection.Assembly myAssembly = System.Reflection.Assembly.GetExecutingAssembly();
-            System.IO.Stream file = myAssembly.GetManifestResourceStream("MapMaker.Wood,horizontal.jpg");
-            
-            Image image = Image.FromStream(file);
-
-            Bitmap newImage = new Bitmap(image, ImagePalette.IMAGE_SIZE, ImagePalette.IMAGE_SIZE);
-
-            Bitmap defaultImage = (Bitmap)newImage.Clone();
-
-            // Pass the loaded image into the default image location in the image palette.
-            map.GetImagePalette().AddNewImage(Map.GetDefaultImage(), defaultImage);
         }
 
         /**********************************************************************PAINT*/

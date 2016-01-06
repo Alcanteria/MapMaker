@@ -21,11 +21,16 @@ namespace MapMaker
         // Contains the current image to be painted onto the map.
         private String currentImage;
 
+        // The default image used by this program for missing tiles.
+        private Bitmap DEFAULT_IMAGE;
+
         /**********************************CONSTRUCTOR*/
         public ImagePalette()
         {
             // Initialize the Dictionary.
             images = new Dictionary<String, Bitmap>();
+
+            LoadDefaultImage();
 
         }
 
@@ -43,18 +48,24 @@ namespace MapMaker
             PrintImageList();
         }
 
-        // Loads the predermined default image file.
-        public void LoadDefaultImage(Image image)
+        // Loads the predermined default image file from the embedded resource file.
+        public void LoadDefaultImage()
         {
             try
             {
-                // Load the default image into a properly sized copy
-                Bitmap newImage = new Bitmap(image, IMAGE_SIZE, IMAGE_SIZE);
+                Assembly assembly;
+                Stream stream;
 
-                Bitmap defaultImage = (Bitmap)newImage.Clone();
+                assembly = Assembly.GetExecutingAssembly();
+                stream = assembly.GetManifestResourceStream("MapMaker.Wood,horizontal.jpg");
+
+                // Load the default image into a properly sized copy
+                Bitmap defaultImage = new Bitmap(Image.FromStream(stream), IMAGE_SIZE, IMAGE_SIZE);
 
                 // Add the key to the default image to the palette.
                 AddNewImage(Map.GetDefaultImage(), defaultImage);
+
+                stream.Close();
 
             }
             catch (Exception e)
